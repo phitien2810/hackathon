@@ -1,19 +1,20 @@
-#!/bin/bash
+#!/bin/sh
 # ==============================================================================
-# 🚀 REACT HACKATHON FULL-STACK STARTER KIT SETUP SCRIPT
+# 🚀 REACT HACKATHON FULL-STACK STARTER KIT SETUP SCRIPT (PNPM + TYPESCRIPT)
 # ==============================================================================
 # Tech Stack:
-#  - React 19 + TypeScript + Vite
-#  - Tailwind CSS + shadcn/ui Design System (Dark/Light Mode)
-#  - Zustand State Management (Persist Storage)
-#  - React Router v7 (Page & Sidebar Navigation)
-#  - Shared Worker (Multi-Tab Realtime Synchronization)
-#  - Service Worker (PWA & Offline Caching)
+#  - Package Manager: pnpm
+#  - Language: TypeScript
+#  - Framework: React 19 + Vite
+#  - Styling: Tailwind CSS + shadcn/ui Design System (Dark/Light Mode)
+#  - State Management: Zustand (LocalStorage Persist)
+#  - Routing: React Router v7 (Layouts & 404 Handler)
+#  - Web Workers: Shared Worker (Multi-Tab Sync) + Service Worker (PWA Offline)
 # ==============================================================================
 
 set -e
 
-# Terminal colors
+# Terminal colors using printf
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
@@ -21,38 +22,58 @@ YELLOW='\033[1;33m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DEFAULT_TARGET="$SCRIPT_DIR"
 
-# Kiểm tra nếu người dùng truyền tham số dòng lệnh $1
+# 1. Đường dẫn dự án (Tham số dòng lệnh hoặc Nhập tương tác)
 if [ -n "$1" ]; then
   RAW_PATH="$1"
 else
-  # Cho phép người dùng nhập path tương tác trong terminal
-  echo -e "${YELLOW}${BOLD}Nhập đường dẫn thư mục dự án muốn tạo:${NC}"
-  echo -e "👉 Nhấn ${CYAN}[Enter]${NC} để dùng mặc định: ${GREEN}${DEFAULT_TARGET}${NC}"
-  read -p "Đường dẫn: " USER_INPUT_PATH
-  RAW_PATH="${USER_INPUT_PATH:-$DEFAULT_TARGET}"
+  printf "${YELLOW}${BOLD}Nhập đường dẫn thư mục dự án muốn tạo:${NC}\n"
+  printf "👉 Nhấn ${CYAN}[Enter]${NC} để dùng mặc định: ${GREEN}%s${NC}\n" "$DEFAULT_TARGET"
+  printf "Đường dẫn: "
+  read USER_INPUT_PATH
+  if [ -z "$USER_INPUT_PATH" ]; then
+    RAW_PATH="$DEFAULT_TARGET"
+  else
+    RAW_PATH="$USER_INPUT_PATH"
+  fi
 fi
 
 # Xử lý ký tự ~ thành $HOME nếu có
-RAW_PATH="${RAW_PATH/#\~/$HOME}"
+case "$RAW_PATH" in
+  \~*) RAW_PATH="$HOME${RAW_PATH#\~}" ;;
+esac
 
-# Tạo thư mục và lấy đường dẫn tuyệt đối
+# Tạo thư mục đích và lấy đường dẫn tuyệt đối
 mkdir -p "$RAW_PATH"
 TARGET_DIR="$(cd "$RAW_PATH" && pwd)"
 
-echo -e "\n${CYAN}${BOLD}======================================================${NC}"
-echo -e "${CYAN}${BOLD}🚀 KHỞI TẠO DỰ ÁN REACTJS HACKATHON STARTER KIT${NC}"
-echo -e "${CYAN}${BOLD}======================================================${NC}"
-echo -e "📁 Thư mục dự án: ${GREEN}${TARGET_DIR}${NC}\n"
+printf "\n${CYAN}${BOLD}======================================================${NC}\n"
+printf "${CYAN}${BOLD}🚀 KHỞI TẠO DỰ ÁN REACT 19 + TYPESCRIPT + PNPM${NC}\n"
+printf "${CYAN}${BOLD}======================================================${NC}\n"
+printf "📁 Thư mục dự án: ${GREEN}%s${NC}\n\n" "$TARGET_DIR"
 
 cd "$TARGET_DIR"
 
 # ------------------------------------------------------------------------------
-# 1. Package Configuration
+# 1. Folder Structure (Tạo toàn bộ thư mục trước)
 # ------------------------------------------------------------------------------
-echo -e "${BLUE}📦 [1/8] Thiết lập package.json và cài đặt dependencies...${NC}"
+printf "${BLUE}📂 [1/7] Tạo cấu trúc thư mục dự án...${NC}\n"
+mkdir -p src/assets src/components/common src/components/layout src/components/ui src/hooks src/lib src/pages src/routes src/stores src/types src/workers public
+
+# ------------------------------------------------------------------------------
+# 2. Package Configuration & pnpm workspace settings
+# ------------------------------------------------------------------------------
+printf "${BLUE}📦 [2/7] Tạo package.json và cấu hình pnpm workspace...${NC}\n"
+
+cat << 'EOF' > pnpm-workspace.yaml
+allowBuilds:
+  esbuild: true
+onlyBuiltDependencies:
+  - esbuild
+EOF
+
 cat << 'EOF' > package.json
 {
   "name": "hackathon-react-starter",
@@ -95,13 +116,10 @@ cat << 'EOF' > package.json
 }
 EOF
 
-echo -e "${CYAN}⏳ Đang chạy npm install...${NC}"
-npm install --silent
-
 # ------------------------------------------------------------------------------
-# 2. Config Files (Vite, TS, Tailwind, PostCSS, shadcn/ui)
+# 3. Config Files (Vite, TSConfig, Tailwind, PostCSS, shadcn/ui)
 # ------------------------------------------------------------------------------
-echo -e "${BLUE}⚙️  [2/8] Tạo các file cấu hình hệ thống...${NC}"
+printf "${BLUE}⚙️  [3/7] Tạo các file cấu hình TypeScript, Tailwind & shadcn...${NC}\n"
 
 # vite.config.ts
 cat << 'EOF' > vite.config.ts
@@ -269,7 +287,7 @@ export default {
 }
 EOF
 
-# components.json for shadcn
+# components.json
 cat << 'EOF' > components.json
 {
   "$schema": "https://ui.shadcn.com/schema.json",
@@ -301,7 +319,7 @@ cat << 'EOF' > index.html
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hackathon Starter | React + TypeScript + Zustand + Workers</title>
+    <title>Hackathon Starter | React 19 + TypeScript + Zustand + Workers</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -314,18 +332,10 @@ cat << 'EOF' > index.html
 EOF
 
 # ------------------------------------------------------------------------------
-# 3. Folder Structure
+# 4. Design System & CSS
 # ------------------------------------------------------------------------------
-echo -e "${BLUE}📂 [3/8] Tạo cấu trúc thư mục dự án...${NC}"
-mkdir -p src/{assets,components/{common,layout,ui},hooks,lib,pages,routes,stores,types,workers}
-mkdir -p public
+printf "${BLUE}🎨 [4/7] Thiết lập CSS Variables & Design System...${NC}\n"
 
-# ------------------------------------------------------------------------------
-# 4. Design System & CSS Variables
-# ------------------------------------------------------------------------------
-echo -e "${BLUE}🎨 [4/8] Thiết lập Design System & CSS Variables...${NC}"
-
-# src/index.css
 cat << 'EOF' > src/index.css
 @tailwind base;
 @tailwind components;
@@ -429,9 +439,9 @@ export function formatDate(date: Date | string | number): string {
 EOF
 
 # ------------------------------------------------------------------------------
-# 5. shadcn/ui Components
+# 5. shadcn/ui Components (TypeScript)
 # ------------------------------------------------------------------------------
-echo -e "${BLUE}🧩 [5/8] Cài đặt UI Components (Button, Card, Badge, Avatar, Tooltip)...${NC}"
+printf "${BLUE}🧩 [5/7] Tạo các UI Components (Button, Card, Badge, Avatar, Tooltip)...${NC}\n"
 
 # Button
 cat << 'EOF' > src/components/ui/button.tsx
@@ -570,6 +580,8 @@ const badgeVariants = cva(
         outline: "text-foreground",
         success:
           "border-transparent bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20",
+        warning:
+          "border-transparent bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/20",
       },
     },
     defaultVariants: {
@@ -635,9 +647,9 @@ export { Avatar, AvatarImage, AvatarFallback };
 EOF
 
 # ------------------------------------------------------------------------------
-# 6. Zustand Stores
+# 6. Zustand Stores, SharedWorker, ServiceWorker, Routes & Pages
 # ------------------------------------------------------------------------------
-echo -e "${BLUE}🗄️  [6/8] Thiết lập Zustand Stores...${NC}"
+printf "${BLUE}🗄️  [6/7] Tạo Zustand Stores, SharedWorker, ServiceWorker & Các Trang...${NC}\n"
 
 # Types
 cat << 'EOF' > src/types/index.ts
@@ -781,11 +793,6 @@ export const useWorkerStore = create<WorkerState>((set) => ({
   setLastPing: (lastPing) => set({ lastPing }),
 }));
 EOF
-
-# ------------------------------------------------------------------------------
-# 7. Shared Worker & Service Worker
-# ------------------------------------------------------------------------------
-echo -e "${BLUE}⚡ [7/8] Thiết lập Shared Worker & Service Worker...${NC}"
 
 # Shared Worker Code
 cat << 'EOF' > src/workers/shared-worker.ts
@@ -1061,6 +1068,7 @@ const ASSETS_TO_CACHE = [
   "/vite.svg"
 ];
 
+// Install Event
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
@@ -1068,6 +1076,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
+// Activate Event
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -1081,37 +1090,99 @@ self.addEventListener("activate", (event) => {
   return self.clients.claim();
 });
 
+// Fetch Event
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
+  const url = new URL(event.request.url);
+
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        if (
-          networkResponse &&
-          networkResponse.status === 200 &&
-          (event.request.url.startsWith("http://") || event.request.url.startsWith("https://"))
-        ) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+    caches.match(event.request).then((cachedResponse) => {
+      const fetchPromise = fetch(event.request)
+        .then((networkResponse) => {
+          if (
+            networkResponse &&
+            networkResponse.status === 200 &&
+            (url.protocol === "http:" || url.protocol === "https:")
+          ) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          if (cachedResponse) return cachedResponse;
+          if (event.request.headers.get("accept")?.includes("text/html")) {
+            return caches.match("/index.html");
+          }
+        });
+
+      return cachedResponse || fetchPromise;
+    })
+  );
+});
+
+// Push Notification Event
+self.addEventListener("push", (event) => {
+  const data = event.data ? event.data.json() : { title: "Hackathon Alert", body: "Thông báo push từ Service Worker!" };
+  const options = {
+    body: data.body,
+    icon: "/vite.svg",
+    badge: "/vite.svg",
+    data: { url: "/" },
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+// Notification Click Event
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({ type: "window" }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url === "/" && "focus" in client) {
+          return client.focus();
         }
-        return networkResponse;
-      })
-      .catch(() => caches.match(event.request))
+      }
+      if (self.clients.openWindow) {
+        return self.clients.openWindow("/");
+      }
+    })
   );
 });
 EOF
 
 # Hook useServiceWorker
 cat << 'EOF' > src/hooks/useServiceWorker.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export function useServiceWorker() {
   const [isRegistered, setIsRegistered] = useState(false);
+  const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [hasUpdate, setHasUpdate] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>(
+    typeof Notification !== "undefined" ? Notification.permission : "default"
+  );
+  const [cachedUrls, setCachedUrls] = useState<string[]>([]);
+
+  const refreshCacheList = useCallback(async () => {
+    if ("caches" in window) {
+      try {
+        const cache = await caches.open("hackathon-cache-v1");
+        const requests = await cache.keys();
+        setCachedUrls(requests.map((req) => req.url));
+      } catch (err) {
+        console.error("Lỗi đọc cache:", err);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -1120,11 +1191,20 @@ export function useServiceWorker() {
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    if ("serviceWorker" in navigator && process.env.NODE_ENV !== "development") {
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
+
+    if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
         .then((reg) => {
           setIsRegistered(true);
+          setRegistration(reg);
+          refreshCacheList();
+
           reg.onupdatefound = () => {
             const installingWorker = reg.installing;
             if (installingWorker) {
@@ -1147,8 +1227,89 @@ export function useServiceWorker() {
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
     };
-  }, []);
+  }, [refreshCacheList]);
+
+  const installPWA = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === "accepted") {
+        setDeferredPrompt(null);
+      }
+    } else {
+      alert("Trình duyệt hiện tại đã cài đặt app hoặc không hỗ trợ PWA prompt!");
+    }
+  };
+
+  const requestNotificationPermission = async () => {
+    if ("Notification" in window) {
+      const permission = await Notification.requestPermission();
+      setNotificationPermission(permission);
+      return permission;
+    }
+    return "denied";
+  };
+
+  const sendTestNotification = async (title = "Hackathon Alert 🚀", body = "Thông báo push từ Service Worker hoạt động hoàn hảo!") => {
+    if ("Notification" in window) {
+      let perm = Notification.permission;
+      if (perm !== "granted") {
+        perm = await requestNotificationPermission();
+      }
+
+      if (perm === "granted" && registration) {
+        registration.showNotification(title, {
+          body,
+          icon: "/vite.svg",
+          badge: "/vite.svg",
+        } as NotificationOptions);
+      } else {
+        alert("Vui lòng cấp quyền thông báo cho trình duyệt!");
+      }
+    }
+  };
+
+  const addUrlToCache = async (url: string) => {
+    if ("caches" in window && url.trim()) {
+      try {
+        const cache = await caches.open("hackathon-cache-v1");
+        await cache.add(url.trim());
+        await refreshCacheList();
+        return true;
+      } catch (err) {
+        console.error("Lỗi khi thêm URL vào cache:", err);
+        alert("Không thể cache URL này (có thể do CORS hoặc URL không hợp lệ).");
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const deleteCacheItem = async (url: string) => {
+    if ("caches" in window) {
+      const cache = await caches.open("hackathon-cache-v1");
+      await cache.delete(url);
+      await refreshCacheList();
+    }
+  };
+
+  const clearAllCache = async () => {
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+      setCachedUrls([]);
+      alert("Đã xóa toàn bộ Cache Storage!");
+    }
+  };
+
+  const checkForUpdate = async () => {
+    if (registration) {
+      await registration.update();
+      alert("Đã kiểm tra Service Worker. Bạn đang dùng phiên bản mới nhất!");
+    }
+  };
 
   const updateServiceWorker = () => {
     window.location.reload();
@@ -1156,17 +1317,24 @@ export function useServiceWorker() {
 
   return {
     isRegistered,
+    registration,
     isOnline,
     hasUpdate,
+    canInstallPWA: !!deferredPrompt,
+    notificationPermission,
+    cachedUrls,
+    installPWA,
+    requestNotificationPermission,
+    sendTestNotification,
+    addUrlToCache,
+    deleteCacheItem,
+    clearAllCache,
+    refreshCacheList,
+    checkForUpdate,
     updateServiceWorker,
   };
 }
 EOF
-
-# ------------------------------------------------------------------------------
-# 8. Layouts, Navigation & Pages
-# ------------------------------------------------------------------------------
-echo -e "${BLUE}📐 [8/8] Xây dựng Layout, Sidebar Navigation & Pages...${NC}"
 
 # Header
 cat << 'EOF' > src/components/layout/Header.tsx
@@ -1271,6 +1439,7 @@ import {
   Flame,
   X,
   Sparkles,
+  Zap,
 } from "lucide-react";
 import { useAppStore } from "@/stores/appStore";
 import { Button } from "@/components/ui/button";
@@ -1287,6 +1456,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { title: "Dashboard", path: "/", icon: LayoutDashboard },
   { title: "Shared Worker Sync", path: "/worker-sync", icon: Cpu, badge: "Multi-tab" },
+  { title: "Service Worker & PWA", path: "/service-worker", icon: Zap, badge: "Offline/PWA" },
   { title: "Analytics", path: "/analytics", icon: BarChart3 },
   { title: "Settings", path: "/settings", icon: Settings },
 ];
@@ -1465,11 +1635,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useWorkerStore } from "@/stores/workerStore";
 import { useAuthStore } from "@/stores/authStore";
+import { useServiceWorker } from "@/hooks/useServiceWorker";
 import { Link } from "react-router-dom";
 
 export const Dashboard: React.FC = () => {
   const { activeTabsCount, sharedCounter } = useWorkerStore();
   const { user } = useAuthStore();
+  const { isOnline, cachedUrls } = useServiceWorker();
 
   const stats = [
     {
@@ -1489,20 +1661,20 @@ export const Dashboard: React.FC = () => {
       bg: "bg-purple-500/10",
     },
     {
-      title: "Zustand Store",
-      value: "Active",
-      desc: "Persist & DevTools Ready",
-      icon: Layers,
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10",
-    },
-    {
-      title: "PWA & Cache",
-      value: "Ready",
-      desc: "Offline-first capability",
+      title: "Trạng Thái Mạng",
+      value: isOnline ? "Online 🟢" : "Offline 🔴",
+      desc: "PWA Service Worker Active",
       icon: Zap,
       color: "text-amber-500",
       bg: "bg-amber-500/10",
+    },
+    {
+      title: "Cache Storage",
+      value: `${cachedUrls.length} files`,
+      desc: "Offline-first Cache",
+      icon: Layers,
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/10",
     },
   ];
 
@@ -1517,12 +1689,17 @@ export const Dashboard: React.FC = () => {
             Xin chào, {user?.name || "Hacker"}! 🚀
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
-            Template chuẩn React 19 + TypeScript + Zustand + SharedWorker + ServiceWorker + shadcn/ui được tối ưu hóa cho các cuộc thi Hackathon đòi hỏi tốc độ phát triển cực nhanh.
+            Template chuẩn React 19 + TypeScript + pnpm + Zustand + SharedWorker + ServiceWorker + shadcn/ui được tối ưu hóa cho các cuộc thi Hackathon đòi hỏi tốc độ phát triển cực nhanh.
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
             <Link to="/worker-sync">
               <Button className="gap-2">
-                <Cpu className="h-4 w-4" /> Thử nghiệm SharedWorker Multi-Tab
+                <Cpu className="h-4 w-4" /> SharedWorker Multi-Tab
+              </Button>
+            </Link>
+            <Link to="/service-worker">
+              <Button variant="secondary" className="gap-2">
+                <Zap className="h-4 w-4" /> Service Worker & PWA Demo
               </Button>
             </Link>
             <Link to="/analytics">
@@ -1564,17 +1741,17 @@ export const Dashboard: React.FC = () => {
               Công Nghệ Đã Tích Hợp Sẵn
             </CardTitle>
             <CardDescription>
-              Mọi thành phần đã cấu hình và sẵn sàng code ngay lập tức
+              Mọi thành phần đã cấu hình TypeScript strictly typed và sẵn sàng code ngay lập tức
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {[
-              { name: "React 19 & TypeScript", desc: "Môi trường type-safe, tốc độ build Vite cực nhanh." },
+              { name: "pnpm & TypeScript", desc: "Quản lý gói siêu tốc, an toàn type-safe toàn bộ dự án." },
               { name: "Tailwind CSS & shadcn/ui", desc: "Design system chuẩn mực, Dark/Light mode, animations." },
               { name: "Zustand State Management", desc: "Quản lý state toàn cục nhẹ nhàng, hỗ trợ LocalStorage persist." },
-              { name: "React Router v7", desc: "Điều hướng trang, layout lồng nhau và 404 page." },
               { name: "Shared Worker", desc: "Giao tiếp và đồng bộ state tức thời giữa nhiều tab trình duyệt." },
-              { name: "Service Worker PWA", desc: "Caching offline, chuẩn bị sẵn cho push notification." },
+              { name: "Service Worker & PWA", desc: "Caching offline, push notifications, quản lý CacheStorage." },
+              { name: "React Router v7", desc: "Điều hướng trang, layout lồng nhau và 404 page." },
             ].map((tech, i) => (
               <div key={i} className="flex items-start gap-3 rounded-lg border bg-accent/30 p-3">
                 <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500 text-xs font-bold">
@@ -1593,29 +1770,22 @@ export const Dashboard: React.FC = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Share2 className="h-5 w-5 text-primary" />
-              Hướng Dẫn Nhanh Hackathon
+              Hướng Dẫn Trải Nghiệm Worker
             </CardTitle>
             <CardDescription>Cách tận dụng tối đa starter kit này</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="rounded-xl border p-4 bg-muted/40 space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">Bước 1: Mở nhiều Tab</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">1. SharedWorker Multi-Tab Sync</h4>
               <p className="text-xs text-muted-foreground">
-                Hãy mở thêm 1 hoặc 2 tab mới với cùng địa chỉ <code>localhost:3000</code> và vào trang <b>Shared Worker Sync</b> để xem state cập nhật theo thời gian thực!
+                Vào mục <b>Shared Worker Sync</b> và mở thêm 1 tab mới: dữ liệu Counter và Chat sẽ đồng bộ ngay lập tức!
               </p>
             </div>
 
             <div className="rounded-xl border p-4 bg-muted/40 space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">Bước 2: Thêm UI shadcn</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">2. Service Worker & PWA Offline</h4>
               <p className="text-xs text-muted-foreground">
-                Các component được đặt trong <code>src/components/ui</code>. Bạn có thể tự do chỉnh sửa hoặc import thêm Radix UI primitives.
-              </p>
-            </div>
-
-            <div className="rounded-xl border p-4 bg-muted/40 space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">Bước 3: Mở rộng Zustand</h4>
-              <p className="text-xs text-muted-foreground">
-                Thêm stores mới tại <code>src/stores/</code> để quản lý dữ liệu nghiệp vụ của bài toán Hackathon.
+                Vào mục <b>Service Worker & PWA</b>: thử bắn Push Notification, kiểm tra tốc độ tải Cache (0-5ms), hoặc ngắt mạng để thử nghiệm chế độ Offline.
               </p>
             </div>
           </CardContent>
@@ -1829,6 +1999,330 @@ export const WorkerSyncPage: React.FC = () => {
 };
 EOF
 
+# ServiceWorkerPage
+cat << 'EOF' > src/pages/ServiceWorkerPage.tsx
+import React, { useState } from "react";
+import {
+  Wifi,
+  WifiOff,
+  Bell,
+  Download,
+  Database,
+  Trash2,
+  Plus,
+  RefreshCw,
+  CheckCircle2,
+  HardDrive,
+  ShieldCheck,
+  Globe,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useServiceWorker } from "@/hooks/useServiceWorker";
+
+export const ServiceWorkerPage: React.FC = () => {
+  const {
+    isRegistered,
+    isOnline,
+    canInstallPWA,
+    notificationPermission,
+    cachedUrls,
+    installPWA,
+    sendTestNotification,
+    addUrlToCache,
+    deleteCacheItem,
+    clearAllCache,
+    refreshCacheList,
+    checkForUpdate,
+  } = useServiceWorker();
+
+  const [customTitle, setCustomTitle] = useState("Hackathon Demo 🚀");
+  const [customBody, setCustomBody] = useState("Service Worker push notification đang hoạt động mượt mà!");
+  const [newCacheUrl, setNewCacheUrl] = useState("");
+  const [fetchTestResult, setFetchTestResult] = useState<{ url: string; time: number; status: string; fromCache: boolean } | null>(null);
+  const [isTestingFetch, setIsTestingFetch] = useState(false);
+
+  const handleSendNotification = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendTestNotification(customTitle, customBody);
+  };
+
+  const handleAddCache = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newCacheUrl.trim()) {
+      await addUrlToCache(newCacheUrl.trim());
+      setNewCacheUrl("");
+    }
+  };
+
+  const handleTestCacheFetch = async () => {
+    setIsTestingFetch(true);
+    const testUrl = "/vite.svg";
+    const startTime = performance.now();
+    try {
+      const response = await fetch(testUrl);
+      const endTime = performance.now();
+      const time = Math.round((endTime - startTime) * 100) / 100;
+      setFetchTestResult({
+        url: testUrl,
+        time,
+        status: `${response.status} ${response.statusText}`,
+        fromCache: time < 15,
+      });
+    } catch (err) {
+      setFetchTestResult({
+        url: testUrl,
+        time: 0,
+        status: "Lỗi kết nối",
+        fromCache: false,
+      });
+    } finally {
+      setIsTestingFetch(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            Service Worker & PWA Playground ⚡
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Khám phá tính năng Caching Offline, Push Notification, PWA Installation và Quản lý Cache Storage.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={checkForUpdate} className="gap-1.5">
+            <RefreshCw className="h-4 w-4" /> Kiểm tra cập nhật
+          </Button>
+          {canInstallPWA && (
+            <Button size="sm" onClick={installPWA} className="gap-1.5 bg-gradient-to-r from-primary to-indigo-500 text-white">
+              <Download className="h-4 w-4" /> Cài đặt App (PWA)
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="border">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">Service Worker</CardTitle>
+            <ShieldCheck className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <Badge variant={isRegistered ? "success" : "destructive"}>
+                {isRegistered ? "Đã Kích Hoạt (Active)" : "Chưa Đăng Ký"}
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">Scope: <code>/</code></p>
+          </CardContent>
+        </Card>
+
+        <Card className="border">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">Trạng Thái Mạng</CardTitle>
+            {isOnline ? <Wifi className="h-4 w-4 text-emerald-500" /> : <WifiOff className="h-4 w-4 text-destructive" />}
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <Badge variant={isOnline ? "success" : "destructive"}>
+                {isOnline ? "Đang Online 🟢" : "Đang Offline 🔴"}
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              {isOnline ? "App kết nối mạng bình thường" : "App đang chạy từ Service Worker cache"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">Quyền Push Notification</CardTitle>
+            <Bell className="h-4 w-4 text-purple-500" />
+          </CardHeader>
+          <CardContent>
+            <Badge variant={notificationPermission === "granted" ? "success" : "warning"}>
+              {notificationPermission.toUpperCase()}
+            </Badge>
+            <p className="text-xs text-muted-foreground mt-2">Local & Web Push Ready</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">Tài nguyên trong Cache</CardTitle>
+            <Database className="h-4 w-4 text-blue-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-black">{cachedUrls.length} files</div>
+            <p className="text-xs text-muted-foreground mt-1">Stored in CacheStorage</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="border shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="h-5 w-5 text-primary" />
+              Thử Nghiệm Push Notifications
+            </CardTitle>
+            <CardDescription>
+              Service Worker có thể hiển thị thông báo hệ thống ngay cả khi tab ở chế độ nền.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSendNotification} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-muted-foreground block mb-1">Tiêu đề thông báo</label>
+                <input
+                  type="text"
+                  value={customTitle}
+                  onChange={(e) => setCustomTitle(e.target.value)}
+                  className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-muted-foreground block mb-1">Nội dung thông báo</label>
+                <textarea
+                  rows={2}
+                  value={customBody}
+                  onChange={(e) => setCustomBody(e.target.value)}
+                  className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                />
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <Badge variant="outline" className="text-xs">
+                  Trạng thái: {notificationPermission === "granted" ? "Đã sẵn sàng" : "Chưa cấp quyền"}
+                </Badge>
+                <Button type="submit" className="gap-2">
+                  <Bell className="h-4 w-4" /> Bắn Notification Test
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+
+        <Card className="border shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <HardDrive className="h-5 w-5 text-primary" />
+              Kiểm Tra Tốc Độ Tải Từ Cache
+            </CardTitle>
+            <CardDescription>
+              Kiểm tra khả năng tải tài nguyên tức thì (0 - 5ms) từ CacheStorage mà không cần internet.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="rounded-xl border p-4 bg-muted/30 flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold">Tài nguyên thử nghiệm: <code>/vite.svg</code></p>
+                <p className="text-xs text-muted-foreground mt-0.5">Tải tài nguyên được Service Worker precache</p>
+              </div>
+              <Button onClick={handleTestCacheFetch} disabled={isTestingFetch} size="sm" variant="secondary" className="gap-1.5">
+                <RefreshCw className={`h-4 w-4 ${isTestingFetch ? "animate-spin" : ""}`} /> Thử Tải Ngay
+              </Button>
+            </div>
+
+            {fetchTestResult && (
+              <div className="rounded-xl border p-4 bg-accent/40 space-y-2 text-xs">
+                <div className="flex items-center justify-between font-bold">
+                  <span>Kết quả phản hồi:</span>
+                  <Badge variant={fetchTestResult.fromCache ? "success" : "default"}>
+                    {fetchTestResult.fromCache ? "Cache Hit ⚡" : "Network Response"}
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-muted-foreground pt-1">
+                  <div>URL: <b className="text-foreground">{fetchTestResult.url}</b></div>
+                  <div>Thời gian tải: <b className="text-foreground text-emerald-500 font-mono">{fetchTestResult.time} ms</b></div>
+                  <div>HTTP Status: <b className="text-foreground">{fetchTestResult.status}</b></div>
+                  <div>Nguồn: <b className="text-foreground">{fetchTestResult.fromCache ? "CacheStorage (Offline Safe)" : "HTTP Network"}</b></div>
+                </div>
+              </div>
+            )}
+
+            <div className="rounded-xl border p-3.5 bg-primary/5 text-xs text-muted-foreground flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+              <span>
+                <b>Mẹo Hackathon:</b> Mở Chrome DevTools (F12) → tab <b>Network</b> → chọn <b>Offline</b> và thử tải lại trang! Ứng dụng vẫn chạy mượt mà nhờ Service Worker.
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="border shadow-sm">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5 text-primary" />
+              Cache Storage Explorer (hackathon-cache-v1)
+            </CardTitle>
+            <CardDescription>
+              Xem danh sách toàn bộ tài nguyên được lưu vào bộ nhớ đệm của Service Worker
+            </CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" onClick={refreshCacheList} className="gap-1.5">
+              <RefreshCw className="h-3.5 w-3.5" /> Làm mới
+            </Button>
+            <Button size="sm" variant="destructive" onClick={clearAllCache} className="gap-1.5">
+              <Trash2 className="h-3.5 w-3.5" /> Xóa tất cả
+            </Button>
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          <form onSubmit={handleAddCache} className="flex gap-2">
+            <input
+              type="text"
+              value={newCacheUrl}
+              onChange={(e) => setNewCacheUrl(e.target.value)}
+              placeholder="Nhập đường dẫn muốn thêm vào cache (vd: /vite.svg hoặc URL hình ảnh)..."
+              className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+            <Button type="submit" className="gap-1.5 shrink-0">
+              <Plus className="h-4 w-4" /> Thêm vào Cache
+            </Button>
+          </form>
+
+          <div className="rounded-xl border divide-y max-h-72 overflow-y-auto">
+            {cachedUrls.length === 0 ? (
+              <div className="p-6 text-center text-xs text-muted-foreground">
+                Chưa có tài nguyên nào trong cache.
+              </div>
+            ) : (
+              cachedUrls.map((url, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 text-xs hover:bg-accent/40 transition-colors">
+                  <div className="flex items-center gap-2 truncate pr-4">
+                    <Globe className="h-4 w-4 text-primary shrink-0" />
+                    <span className="font-mono text-foreground truncate">{url}</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => deleteCacheItem(url)}
+                    className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
+                  >
+                    <Trash2 className="h-3.5 w-3.5 mr-1" /> Xóa
+                  </Button>
+                </div>
+              ))
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+EOF
+
 # Analytics Page
 cat << 'EOF' > src/pages/AnalyticsPage.tsx
 import React from "react";
@@ -2017,6 +2511,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Dashboard } from "@/pages/Dashboard";
 import { WorkerSyncPage } from "@/pages/WorkerSyncPage";
+import { ServiceWorkerPage } from "@/pages/ServiceWorkerPage";
 import { AnalyticsPage } from "@/pages/AnalyticsPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { NotFound } from "@/pages/NotFound";
@@ -2028,6 +2523,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: "worker-sync", element: <WorkerSyncPage /> },
+      { path: "service-worker", element: <ServiceWorkerPage /> },
       { path: "analytics", element: <AnalyticsPage /> },
       { path: "settings", element: <SettingsPage /> },
       { path: "*", element: <NotFound /> },
@@ -2077,9 +2573,7 @@ logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
 node_modules
 dist
@@ -2098,22 +2592,39 @@ dist-ssr
 EOF
 
 cat << 'EOF' > README.md
-# 🚀 React Hackathon Starter Kit
+# 🚀 React Hackathon Starter Kit (pnpm + TypeScript)
 
-> Template chuẩn mực cho các cuộc thi Hackathon: **React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui + Zustand + React Router v7 + SharedWorker + ServiceWorker**.
+> Template chuẩn mực cho các cuộc thi Hackathon: **React 19 + TypeScript + pnpm + Vite + Tailwind CSS + shadcn/ui + Zustand + React Router v7 + SharedWorker + ServiceWorker**.
 
 ## 🛠️ Khởi Chạy
 ```bash
-npm install
-npm run dev
+# 1. Cài đặt dependencies với pnpm
+pnpm install
+
+# 2. Khởi động Dev Server
+pnpm dev
+
+# 3. Build sản phẩm
+pnpm run build
 ```
 EOF
 
+# ------------------------------------------------------------------------------
+# 7. Run pnpm install
+# ------------------------------------------------------------------------------
+printf "${BLUE}⚡ [7/7] Cài đặt dependencies qua pnpm...${NC}\n"
+if command -v pnpm >/dev/null 2>&1; then
+  pnpm install
+else
+  printf "${YELLOW}⚠️  pnpm chưa có sẵn, sử dụng npx pnpm...${NC}\n"
+  npx -y pnpm install
+fi
+
 chmod +x setup.sh 2>/dev/null || true
 
-echo -e "\n${GREEN}${BOLD}======================================================${NC}"
-echo -e "${GREEN}${BOLD}✅ DỰ ÁN REACT HACKATHON ĐÃ ĐƯỢC TẠO THÀNH CÔNG!${NC}"
-echo -e "${GREEN}${BOLD}======================================================${NC}"
-echo -e "👉 Để khởi chạy dự án:"
-echo -e "   ${CYAN}cd \"$TARGET_DIR\"${NC}"
-echo -e "   ${CYAN}npm run dev${NC}\n"
+printf "\n${GREEN}${BOLD}======================================================${NC}\n"
+printf "${GREEN}${BOLD}✅ DỰ ÁN REACT HACKATHON ĐÃ ĐƯỢC TẠO THÀNH CÔNG!${NC}\n"
+printf "${GREEN}${BOLD}======================================================${NC}\n"
+printf "👉 Để khởi chạy dự án:\n"
+printf "   ${CYAN}cd \"%s\"${NC}\n" "$TARGET_DIR"
+printf "   ${CYAN}pnpm dev${NC}\n\n"
