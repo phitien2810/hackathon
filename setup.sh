@@ -23,9 +23,9 @@ NC='\033[0m'
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DEFAULT_TARGET="$SCRIPT_DIR"
 
-printf "\n${CYAN}${BOLD}================================================================${NC}\n"
-printf "${CYAN}${BOLD}🚀 KHỞI TẠO DỰ ÁN REACT 19 + TYPESCRIPT + PNPM (HACKATHON KIT)${NC}\n"
-printf "${CYAN}${BOLD}================================================================${NC}\n\n"
+printf "\n${CYAN}${BOLD}================================================================================${NC}\n"
+printf "${CYAN}${BOLD}🚀 KHỞI TẠO DỰ ÁN REACT 19 + TYPESCRIPT + PNPM (HACKATHON STARTER KIT)${NC}\n"
+printf "${CYAN}${BOLD}================================================================================${NC}\n\n"
 
 # ------------------------------------------------------------------------------
 # 1. Nhập đường dẫn dự án
@@ -56,7 +56,7 @@ TARGET_DIR="$(cd "$RAW_PATH" && pwd)"
 # 2. Chọn các tính năng tuỳ chọn (Optional Features)
 # ------------------------------------------------------------------------------
 printf "\n${YELLOW}${BOLD}2. Chọn các tính năng nâng cao (Optional Features):${NC}\n"
-printf "   ${GREEN}✓${NC} React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui + Zustand (${BOLD}Mặc định có sẵn${NC})\n\n"
+printf "   ${GREEN}✓${NC} React 19 + TypeScript + Vite + Tailwind CSS + shadcn/ui + Zustand + Router (${BOLD}Mặc định${NC})\n\n"
 
 # Option 1: Shared Worker
 printf "👉 Bạn có muốn thêm ${CYAN}${BOLD}[Shared Worker]${NC} (Đồng bộ real-time nhiều Tab)? [Y/n]: "
@@ -82,9 +82,9 @@ case "$INPUT_SERVICE_WORKER" in
     ;;
 esac
 
-printf "\n${MAGENTA}${BOLD}📋 Tóm tắt cấu hình dự án:${NC}\n"
+printf "\n${MAGENTA}${BOLD}📋 Cấu hình đã chọn:${NC}\n"
 printf " • Thư mục: ${GREEN}%s${NC}\n" "$TARGET_DIR"
-printf " • Core Stack: React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, Zustand, Router\n"
+printf " • Core Stack: React 19, TypeScript, Vite, Tailwind CSS, shadcn/ui, Zustand, React Router v7\n"
 if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
   printf " • Shared Worker: ${GREEN}BẬT (Enabled)${NC}\n"
 else
@@ -95,23 +95,25 @@ if [ "$ENABLE_SERVICE_WORKER" = "y" ]; then
 else
   printf " • Service Worker & PWA: ${YELLOW}TẮT (Disabled)${NC}\n"
 fi
-printf "\n"
+
+printf "\n${CYAN}${BOLD}📋 TIẾN TRÌNH THỰC HIỆN TỪNG BƯỚC (ROADMAP):${NC}\n"
+printf "  [1/9] 📦 Khởi tạo Project & Cấu hình pnpm (package.json, pnpm-workspace.yaml)\n"
+printf "  [2/9] 📂 Thiết lập Cấu trúc Thư mục chuẩn (Folder Structure)\n"
+printf "  [3/9] ⚙️  Cấu hình TypeScript & Vite Bundler (tsconfig, vite.config.ts)\n"
+printf "  [4/9] 🎨 Thiết lập Tailwind CSS & Design System (index.css, CSS variables)\n"
+printf "  [5/9] 🧩 Tích hợp shadcn/ui Components (Button, Card, Badge, Avatar)\n"
+printf "  [6/9] 🗄️  Thiết lập Zustand Store (App Theme, Auth Store, Persist)\n"
+printf "  [7/9] 🧭 Xây dựng Responsive Sidebar & Page Navigation (React Router v7)\n"
+printf "  [8/9] ⚡ Tích hợp Web Workers (SharedWorker & ServiceWorker PWA)\n"
+printf "  [9/9] 📥 Cài đặt Dependencies qua pnpm & Hoàn tất!\n\n"
 
 cd "$TARGET_DIR"
 
 # ------------------------------------------------------------------------------
-# 3. Tạo cấu trúc thư mục
+# BƯỚC 1: Khởi tạo Project & Cấu hình pnpm
 # ------------------------------------------------------------------------------
-printf "${BLUE}📂 [1/7] Tạo cấu trúc thư mục dự án...${NC}\n"
-mkdir -p src/assets src/components/common src/components/layout src/components/ui src/hooks src/lib src/pages src/routes src/stores src/types public
-if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
-  mkdir -p src/workers
-fi
-
-# ------------------------------------------------------------------------------
-# 4. Package Configuration & pnpm workspace settings
-# ------------------------------------------------------------------------------
-printf "${BLUE}📦 [2/7] Tạo package.json và cấu hình pnpm workspace...${NC}\n"
+printf "${BLUE}${BOLD}▶️ [BƯỚC 1/9] 📦 Khởi tạo Project & Cấu hình pnpm...${NC}\n"
+printf "   ↳ Tạo package.json và pnpm-workspace.yaml cho pnpm v11...\n"
 
 cat << 'EOF' > pnpm-workspace.yaml
 allowBuilds:
@@ -161,11 +163,25 @@ cat << 'EOF' > package.json
   }
 }
 EOF
+printf "   ${GREEN}✓ Hoàn tất cấu hình package.json & pnpm workspace.${NC}\n\n"
 
 # ------------------------------------------------------------------------------
-# 5. Config Files (Vite, TSConfig, Tailwind, PostCSS, shadcn/ui)
+# BƯỚC 2: Cấu trúc thư mục (Folder Structure)
 # ------------------------------------------------------------------------------
-printf "${BLUE}⚙️  [3/7] Tạo các file cấu hình TypeScript, Tailwind & shadcn...${NC}\n"
+printf "${BLUE}${BOLD}▶️ [BƯỚC 2/9] 📂 Thiết lập Cấu trúc Thư mục chuẩn (Folder Structure)...${NC}\n"
+printf "   ↳ Tạo src/components, src/stores, src/hooks, src/pages, src/routes, src/lib, public...\n"
+
+mkdir -p src/assets src/components/common src/components/layout src/components/ui src/hooks src/lib src/pages src/routes src/stores src/types public
+if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
+  mkdir -p src/workers
+fi
+printf "   ${GREEN}✓ Hoàn tất thiết lập cấu trúc thư mục.${NC}\n\n"
+
+# ------------------------------------------------------------------------------
+# BƯỚC 3: Cấu hình TypeScript & Vite Bundler
+# ------------------------------------------------------------------------------
+printf "${BLUE}${BOLD}▶️ [BƯỚC 3/9] ⚙️  Cấu hình TypeScript & Vite Bundler...${NC}\n"
+printf "   ↳ Tạo vite.config.ts, tsconfig.json, tsconfig.app.json, tsconfig.node.json, index.html...\n"
 
 # vite.config.ts
 if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
@@ -270,6 +286,33 @@ cat << 'EOF' > tsconfig.node.json
 }
 EOF
 
+# index.html
+cat << 'EOF' > index.html
+<!doctype html>
+<html lang="vi" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hackathon Starter | React 19 + TypeScript + Zustand + shadcn/ui</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-background font-sans antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+EOF
+printf "   ${GREEN}✓ Hoàn tất cấu hình TypeScript và Vite Bundler.${NC}\n\n"
+
+# ------------------------------------------------------------------------------
+# BƯỚC 4: Cấu hình Tailwind CSS & Design System
+# ------------------------------------------------------------------------------
+printf "${BLUE}${BOLD}▶️ [BƯỚC 4/9] 🎨 Thiết lập Tailwind CSS & Design System...${NC}\n"
+printf "   ↳ Tạo tailwind.config.js, postcss.config.js, src/index.css (HSL Variables & Dark/Light mode)...\n"
+
 # tailwind.config.js
 cat << 'EOF' > tailwind.config.js
 /** @type {import('tailwindcss').Config} */
@@ -354,55 +397,7 @@ export default {
 }
 EOF
 
-# components.json
-cat << 'EOF' > components.json
-{
-  "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "default",
-  "rsc": false,
-  "tsx": true,
-  "tailwind": {
-    "config": "tailwind.config.js",
-    "css": "src/index.css",
-    "baseColor": "slate",
-    "cssVariables": true,
-    "prefix": ""
-  },
-  "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
-  }
-}
-EOF
-
-# index.html
-cat << 'EOF' > index.html
-<!doctype html>
-<html lang="vi" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hackathon Starter | React 19 + TypeScript + Zustand + shadcn/ui</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  </head>
-  <body class="min-h-screen bg-background font-sans antialiased">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
-EOF
-
-# ------------------------------------------------------------------------------
-# 6. Design System & CSS
-# ------------------------------------------------------------------------------
-printf "${BLUE}🎨 [4/7] Thiết lập CSS Variables & Design System...${NC}\n"
-
+# src/index.css
 cat << 'EOF' > src/index.css
 @tailwind base;
 @tailwind components;
@@ -504,11 +499,37 @@ export function formatDate(date: Date | string | number): string {
   }).format(new Date(date));
 }
 EOF
+printf "   ${GREEN}✓ Hoàn tất thiết lập Tailwind CSS & Design System.${NC}\n\n"
 
 # ------------------------------------------------------------------------------
-# 7. shadcn/ui Components (TypeScript)
+# BƯỚC 5: Tích hợp shadcn/ui Components
 # ------------------------------------------------------------------------------
-printf "${BLUE}🧩 [5/7] Tạo các UI Components (Button, Card, Badge, Avatar, Tooltip)...${NC}\n"
+printf "${BLUE}${BOLD}▶️ [BƯỚC 5/9] 🧩 Tích hợp shadcn/ui Components...${NC}\n"
+printf "   ↳ Tạo components.json, Button, Card, Badge, Avatar...\n"
+
+# components.json
+cat << 'EOF' > components.json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/index.css",
+    "baseColor": "slate",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  }
+}
+EOF
 
 # Button
 cat << 'EOF' > src/components/ui/button.tsx
@@ -712,11 +733,13 @@ AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
 export { Avatar, AvatarImage, AvatarFallback };
 EOF
+printf "   ${GREEN}✓ Hoàn tất tạo các components shadcn/ui.${NC}\n\n"
 
 # ------------------------------------------------------------------------------
-# 8. Zustand Stores & Types
+# BƯỚC 6: Thiết lập Zustand Stores
 # ------------------------------------------------------------------------------
-printf "${BLUE}🗄️  [6/7] Tạo Zustand Stores, Layouts, Pages & Routing...${NC}\n"
+printf "${BLUE}${BOLD}▶️ [BƯỚC 6/9] 🗄️  Thiết lập Zustand Store & Types...${NC}\n"
+printf "   ↳ Tạo types/index.ts, stores/appStore.ts (Theme & Sidebar), stores/authStore.ts...\n"
 
 # Types
 if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
@@ -833,11 +856,886 @@ export const useAuthStore = create<AuthState>()(
   )
 );
 EOF
+printf "   ${GREEN}✓ Hoàn tất thiết lập Zustand Stores.${NC}\n\n"
 
 # ------------------------------------------------------------------------------
-# 9. Optional: Shared Worker
+# BƯỚC 7: Responsive Sidebar, Header & Page Navigation (Router v7)
 # ------------------------------------------------------------------------------
+printf "${BLUE}${BOLD}▶️ [BƯỚC 7/9] 🧭 Xây dựng Responsive Sidebar & Page Navigation...${NC}\n"
+printf "   ↳ Tạo Header.tsx, Sidebar.tsx (căn giữa icon toggled), AppLayout.tsx, AppRoutes.tsx, Pages...\n"
+
+# Header.tsx
 if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
+cat << 'EOF' > src/components/layout/Header.tsx
+import React from "react";
+import { Menu, Moon, Sun, Users } from "lucide-react";
+import { useAppStore } from "@/stores/appStore";
+import { useWorkerStore } from "@/stores/workerStore";
+import { useAuthStore } from "@/stores/authStore";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+
+export const Header: React.FC = () => {
+  const { theme, setTheme, toggleSidebar, setMobileSidebarOpen } = useAppStore();
+  const { activeTabsCount, isSharedWorkerActive } = useWorkerStore();
+  const { user } = useAuthStore();
+
+  return (
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/80 px-4 backdrop-blur-md transition-all lg:px-6">
+      <div className="flex items-center gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="lg:hidden"
+          onClick={() => setMobileSidebarOpen(true)}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden lg:flex"
+          onClick={toggleSidebar}
+          title="Thu gọn / Mở rộng Sidebar"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+
+        <div className="flex items-center gap-2">
+          <span className="bg-gradient-to-r from-primary via-indigo-500 to-purple-500 bg-clip-text text-lg font-extrabold text-transparent">
+            HACKATHON
+          </span>
+          <Badge variant="outline" className="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider">
+            React 19 + TS
+          </Badge>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1.5 rounded-full bg-secondary/80 px-3 py-1 text-xs font-medium backdrop-blur-sm border">
+          <Users className="h-3.5 w-3.5 text-primary" />
+          <span className="hidden sm:inline text-muted-foreground">Tabs:</span>
+          <span className="font-bold text-foreground">{activeTabsCount}</span>
+          <span
+            className={`h-2 w-2 rounded-full ${
+              isSharedWorkerActive ? "bg-emerald-500 animate-pulse" : "bg-muted"
+            }`}
+          />
+        </div>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="rounded-full"
+        >
+          {theme === "dark" ? (
+            <Sun className="h-4 w-4 text-amber-400" />
+          ) : (
+            <Moon className="h-4 w-4 text-slate-700" />
+          )}
+        </Button>
+
+        {user && (
+          <div className="flex items-center gap-2 pl-2">
+            <Avatar className="h-8 w-8 ring-2 ring-primary/20">
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="hidden text-left md:block">
+              <p className="text-xs font-semibold leading-none">{user.name}</p>
+              <p className="text-[10px] text-muted-foreground capitalize">{user.role}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+};
+EOF
+else
+cat << 'EOF' > src/components/layout/Header.tsx
+import React from "react";
+import { Menu, Moon, Sun } from "lucide-react";
+import { useAppStore } from "@/stores/appStore";
+import { useAuthStore } from "@/stores/authStore";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+
+export const Header: React.FC = () => {
+  const { theme, setTheme, toggleSidebar, setMobileSidebarOpen } = useAppStore();
+  const { user } = useAuthStore();
+
+  return (
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/80 px-4 backdrop-blur-md transition-all lg:px-6">
+      <div className="flex items-center gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="lg:hidden"
+          onClick={() => setMobileSidebarOpen(true)}
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden lg:flex"
+          onClick={toggleSidebar}
+          title="Thu gọn / Mở rộng Sidebar"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+
+        <div className="flex items-center gap-2">
+          <span className="bg-gradient-to-r from-primary via-indigo-500 to-purple-500 bg-clip-text text-lg font-extrabold text-transparent">
+            HACKATHON
+          </span>
+          <Badge variant="outline" className="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider">
+            React 19 + TS
+          </Badge>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 sm:gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="rounded-full"
+        >
+          {theme === "dark" ? (
+            <Sun className="h-4 w-4 text-amber-400" />
+          ) : (
+            <Moon className="h-4 w-4 text-slate-700" />
+          )}
+        </Button>
+
+        {user && (
+          <div className="flex items-center gap-2 pl-2">
+            <Avatar className="h-8 w-8 ring-2 ring-primary/20">
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="hidden text-left md:block">
+              <p className="text-xs font-semibold leading-none">{user.name}</p>
+              <p className="text-[10px] text-muted-foreground capitalize">{user.role}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+};
+EOF
+fi
+
+# Sidebar.tsx
+cat << EOF > src/components/layout/Sidebar.tsx
+import React from "react";
+import { NavLink } from "react-router-dom";
+import {
+  LayoutDashboard,
+  BarChart3,
+  Settings,
+  Flame,
+  X,
+  Sparkles,
+  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf "Cpu,\n  ")$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf "Zap,\n  ")
+} from "lucide-react";
+import { useAppStore } from "@/stores/appStore";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+
+interface NavItem {
+  title: string;
+  path: string;
+  icon: React.ElementType;
+  badge?: string;
+}
+
+const navItems: NavItem[] = [
+  { title: "Dashboard", path: "/", icon: LayoutDashboard },
+  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '{ title: "Shared Worker Sync", path: "/worker-sync", icon: Cpu, badge: "Multi-tab" },\n  ')$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{ title: "Service Worker & PWA", path: "/service-worker", icon: Zap, badge: "Offline/PWA" },\n  '){ title: "Analytics", path: "/analytics", icon: BarChart3 },
+  { title: "Settings", path: "/settings", icon: Settings },
+];
+
+export const Sidebar: React.FC = () => {
+  const { isSidebarCollapsed, isMobileSidebarOpen, setMobileSidebarOpen } = useAppStore();
+
+  const renderNavLinks = (isMobile = false) => {
+    const collapsed = isSidebarCollapsed && !isMobile;
+
+    return (
+      <div
+        className={cn(
+          "flex flex-col gap-2 py-4",
+          collapsed ? "items-center px-2" : "px-3"
+        )}
+      >
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              title={collapsed ? item.title : undefined}
+              onClick={() => setMobileSidebarOpen(false)}
+              className={({ isActive }) =>
+                cn(
+                  "group relative flex items-center rounded-xl text-sm font-medium transition-all duration-200",
+                  collapsed
+                    ? "h-11 w-11 justify-center p-0"
+                    : "w-full gap-3 px-3.5 py-2.5",
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                )
+              }
+            >
+              <Icon className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
+
+              {!collapsed && (
+                <span className="truncate transition-opacity duration-200">
+                  {item.title}
+                </span>
+              )}
+
+              {item.badge && !collapsed && (
+                <Badge
+                  variant="secondary"
+                  className="ml-auto hidden text-[10px] uppercase font-bold sm:inline-flex"
+                >
+                  {item.badge}
+                </Badge>
+              )}
+            </NavLink>
+          );
+        })}
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <aside
+        className={cn(
+          "hidden border-r bg-sidebar transition-all duration-300 ease-in-out lg:flex lg:flex-col",
+          isSidebarCollapsed ? "w-20" : "w-64"
+        )}
+      >
+        <div
+          className={cn(
+            "flex h-16 items-center border-b transition-all duration-300",
+            isSidebarCollapsed ? "justify-center px-2" : "gap-3 px-5"
+          )}
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-indigo-500 shadow-md shadow-primary/30">
+            <Flame className="h-5 w-5 text-white" />
+          </div>
+          {!isSidebarCollapsed && (
+            <div className="flex flex-col overflow-hidden">
+              <span className="font-extrabold text-foreground tracking-tight truncate">
+                FAST PROTOTYPE
+              </span>
+              <span className="text-[10px] text-muted-foreground truncate">
+                Hackathon Edition
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="flex-1 overflow-y-auto">{renderNavLinks(false)}</div>
+
+        {!isSidebarCollapsed && (
+          <div className="p-4">
+            <div className="rounded-xl border bg-gradient-to-br from-primary/10 via-background to-secondary p-3.5 text-center">
+              <Sparkles className="mx-auto h-5 w-5 text-primary mb-1" />
+              <p className="text-xs font-bold text-foreground">Hackathon Ready</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Zustand + shadcn/ui</p>
+            </div>
+          </div>
+        )}
+      </aside>
+
+      {isMobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 flex lg:hidden">
+          <div
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+          <div className="relative z-50 flex w-72 flex-col border-r bg-sidebar shadow-2xl">
+            <div className="flex h-16 items-center justify-between border-b px-5">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white">
+                  <Flame className="h-4 w-4" />
+                </div>
+                <span className="font-bold text-foreground">HACKATHON</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileSidebarOpen(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <div className="flex-1 overflow-y-auto">{renderNavLinks(true)}</div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+EOF
+
+# AppLayout.tsx
+cat << EOF > src/components/layout/AppLayout.tsx
+import React from "react";
+import { Outlet } from "react-router-dom";
+import { Sidebar } from "./Sidebar";
+import { Header } from "./Header";
+$([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'import { useSharedWorker } from "@/hooks/useSharedWorker";\n')
+$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'import { useServiceWorker } from "@/hooks/useServiceWorker";\nimport { RefreshCw, WifiOff } from "lucide-react";\nimport { Button } from "@/components/ui/button";\n')
+
+export const AppLayout: React.FC = () => {
+  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'useSharedWorker();\n  ')
+  $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'const { isOnline, hasUpdate, updateServiceWorker } = useServiceWorker();\n  ')
+
+  return (
+    <div className="flex min-h-screen bg-background text-foreground">
+      <Sidebar />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <Header />
+        $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{!isOnline && (
+          <div className="flex items-center justify-center gap-2 bg-destructive/15 px-4 py-2 text-xs font-semibold text-destructive border-b border-destructive/20">
+            <WifiOff className="h-4 w-4" />
+            Bạn đang offline! Ứng dụng vẫn hoạt động nhờ ServiceWorker cache.
+          </div>
+        )}
+        {hasUpdate && (
+          <div className="flex items-center justify-between bg-primary px-4 py-2 text-xs font-medium text-primary-foreground">
+            <span>Phiên bản mới đã sẵn sàng!</span>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="h-7 text-xs gap-1"
+              onClick={updateServiceWorker}
+            >
+              <RefreshCw className="h-3 w-3" /> Cập nhật ngay
+            </Button>
+          </div>
+        )}\n        ')<main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+};
+EOF
+
+# Dashboard.tsx
+cat << EOF > src/pages/Dashboard.tsx
+import React from "react";
+import {
+  Activity,
+  Boxes,
+  Layers,
+  Share2,
+  Zap,
+  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'Cpu,\n  Users,\n  ')
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useAuthStore } from "@/stores/authStore";
+import { Link } from "react-router-dom";
+$([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'import { useWorkerStore } from "@/stores/workerStore";\n')
+$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'import { useServiceWorker } from "@/hooks/useServiceWorker";\n')
+
+export const Dashboard: React.FC = () => {
+  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'const { activeTabsCount, sharedCounter } = useWorkerStore();\n  ')
+  $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'const { isOnline, cachedUrls } = useServiceWorker();\n  ')
+  const { user } = useAuthStore();
+
+  const stats = [
+    $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '{
+      title: "Tabs Đang Mở",
+      value: `${activeTabsCount} tabs`,
+      desc: "Đồng bộ qua SharedWorker",
+      icon: Users,
+      color: "text-blue-500",
+      bg: "bg-blue-500/10",
+    },
+    {
+      title: "Shared Counter",
+      value: sharedCounter,
+      desc: "State chung giữa các tab",
+      icon: Cpu,
+      color: "text-purple-500",
+      bg: "bg-purple-500/10",
+    },\n    ')
+    $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{
+      title: "Trạng Thái Mạng",
+      value: isOnline ? "Online 🟢" : "Offline 🔴",
+      desc: "PWA Service Worker Active",
+      icon: Zap,
+      color: "text-amber-500",
+      bg: "bg-amber-500/10",
+    },
+    {
+      title: "Cache Storage",
+      value: `${cachedUrls.length} files`,
+      desc: "Offline-first Cache",
+      icon: Layers,
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/10",
+    },\n    ')
+    {
+      title: "Zustand State",
+      value: "Active",
+      desc: "Persist & DevTools Ready",
+      icon: Layers,
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/10",
+    },
+    {
+      title: "shadcn/ui & Tailwind",
+      value: "Ready",
+      desc: "Modern Design System",
+      icon: Zap,
+      color: "text-indigo-500",
+      bg: "bg-indigo-500/10",
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-r from-primary/10 via-purple-500/10 to-pink-500/10 p-6 md:p-8 backdrop-blur-xl">
+        <div className="relative z-10 max-w-2xl space-y-3">
+          <Badge variant="default" className="bg-primary/90">
+            Hackathon Starter v1.0
+          </Badge>
+          <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-foreground">
+            Xin chào, {user?.name || "Hacker"}! 🚀
+          </h1>
+          <p className="text-sm md:text-base text-muted-foreground">
+            Template chuẩn React 19 + TypeScript + pnpm + Zustand + shadcn/ui được tối ưu hóa cho các cuộc thi Hackathon đòi hỏi tốc độ phát triển cực nhanh.
+          </p>
+          <div className="flex flex-wrap gap-3 pt-2">
+            $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '<Link to="/worker-sync">
+              <Button className="gap-2">
+                <Cpu className="h-4 w-4" /> SharedWorker Multi-Tab
+              </Button>
+            </Link>\n            ')
+            $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '<Link to="/service-worker">
+              <Button variant="secondary" className="gap-2">
+                <Zap className="h-4 w-4" /> Service Worker & PWA
+              </Button>
+            </Link>\n            ')
+            <Link to="/analytics">
+              <Button variant="outline" className="gap-2">
+                <Activity className="h-4 w-4" /> Xem Analytics
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {stats.slice(0, 4).map((item, idx) => {
+          const Icon = item.icon;
+          return (
+            <Card key={idx} className="relative overflow-hidden border">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {item.title}
+                </CardTitle>
+                <div className={\`rounded-xl p-2.5 \${item.bg}\`}>
+                  <Icon className={\`h-4 w-4 \${item.color}\`} />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-black">{item.value}</div>
+                <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Boxes className="h-5 w-5 text-primary" />
+              Công Nghệ Đã Tích Hợp Sẵn
+            </CardTitle>
+            <CardDescription>
+              Mọi thành phần đã cấu hình TypeScript strictly typed và sẵn sàng code ngay lập tức
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {[
+              { name: "pnpm & TypeScript", desc: "Quản lý gói siêu tốc, an toàn type-safe toàn bộ dự án." },
+              { name: "Tailwind CSS & shadcn/ui", desc: "Design system chuẩn mực, Dark/Light mode, animations." },
+              { name: "Zustand State Management", desc: "Quản lý state toàn cục nhẹ nhàng, hỗ trợ LocalStorage persist." },
+              $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '{ name: "Shared Worker", desc: "Giao tiếp và đồng bộ state tức thời giữa nhiều tab trình duyệt." },\n              ')
+              $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{ name: "Service Worker & PWA", desc: "Caching offline, push notifications, quản lý CacheStorage." },\n              ')
+              { name: "React Router v7", desc: "Điều hướng trang, layout lồng nhau và 404 page." },
+            ].map((tech, i) => (
+              <div key={i} className="flex items-start gap-3 rounded-lg border bg-accent/30 p-3">
+                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500 text-xs font-bold">
+                  ✓
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold">{tech.name}</h4>
+                  <p className="text-xs text-muted-foreground">{tech.desc}</p>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Share2 className="h-5 w-5 text-primary" />
+              Hướng Dẫn Nhanh Hackathon
+            </CardTitle>
+            <CardDescription>Cách tận dụng tối đa starter kit này</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="rounded-xl border p-4 bg-muted/40 space-y-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">1. UI & Components</h4>
+              <p className="text-xs text-muted-foreground">
+                Tất cả các components shadcn/ui nằm trong <code>src/components/ui/</code>. Bạn có thể mở rộng tự do!
+              </p>
+            </div>
+
+            <div className="rounded-xl border p-4 bg-muted/40 space-y-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">2. State Management</h4>
+              <p className="text-xs text-muted-foreground">
+                Tạo thêm stores tại <code>src/stores/</code> để lưu trữ state nghiệp vụ với Zustand.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+EOF
+
+# AnalyticsPage.tsx
+cat << 'EOF' > src/pages/AnalyticsPage.tsx
+import React from "react";
+import { TrendingUp, Users, Clock, ShieldCheck } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
+export const AnalyticsPage: React.FC = () => {
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Analytics & Metrics 📊</h1>
+        <p className="text-sm text-muted-foreground">
+          Trang mẫu theo dõi hiệu năng và chỉ số ứng dụng thời gian thực.
+        </p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          { title: "Thời gian phản hồi UI", value: "1.2 ms", change: "+99.8% Faster", icon: Clock },
+          { title: "Độ sẵn sàng hệ thống", value: "99.9%", change: "High Availability", icon: ShieldCheck },
+          { title: "Tải CPU Client", value: "< 0.5%", change: "Optimized render", icon: TrendingUp },
+          { title: "Lượt tương tác", value: "1,248", change: "+14% hôm nay", icon: Users },
+        ].map((item, i) => {
+          const Icon = item.icon;
+          return (
+            <Card key={i} className="border">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">{item.title}</CardTitle>
+                <Icon className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{item.value}</div>
+                <Badge variant="outline" className="mt-1 text-[10px] text-emerald-500">
+                  {item.change}
+                </Badge>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      <Card className="border">
+        <CardHeader>
+          <CardTitle>Biểu đồ hiệu năng Hackathon</CardTitle>
+          <CardDescription>Sử dụng CSS Native Bars hoặc tích hợp Recharts / Chart.js tùy nhu cầu.</CardDescription>
+        </CardHeader>
+        <CardContent className="h-64 flex items-end gap-3 pt-8 pb-4">
+          {[45, 78, 56, 92, 64, 88, 95, 70, 85, 100].map((val, idx) => (
+            <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
+              <div
+                style={{ height: `${val}%` }}
+                className="w-full rounded-t-lg bg-gradient-to-t from-primary/60 to-primary transition-all duration-300 group-hover:opacity-80 group-hover:scale-y-105"
+              />
+              <span className="text-[10px] text-muted-foreground">T{idx + 1}</span>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+EOF
+
+# SettingsPage.tsx
+cat << EOF > src/pages/SettingsPage.tsx
+import React from "react";
+import { Moon, Sun, Laptop, Trash2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useAppStore } from "@/stores/appStore";
+$([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'import { useWorkerStore } from "@/stores/workerStore";\n')
+
+export const SettingsPage: React.FC = () => {
+  const { theme, setTheme } = useAppStore();
+  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'const { clearMessages } = useWorkerStore();\n')
+
+  $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'const handleClearCache = async () => {
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+      alert("Đã xóa toàn bộ Service Worker Caches thành công!");
+    }
+  };\n  ')
+
+  return (
+    <div className="max-w-4xl space-y-6">
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Cài Đặt Hệ Thống ⚙️</h1>
+        <p className="text-sm text-muted-foreground">
+          Quản lý giao diện, trạng thái bộ nhớ đệm và thiết lập ứng dụng.
+        </p>
+      </div>
+
+      <Card className="border">
+        <CardHeader>
+          <CardTitle>Giao diện (Theme Mode)</CardTitle>
+          <CardDescription>Chọn chế độ hiển thị phù hợp với sở thích của bạn.</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-3">
+          <Button
+            variant={theme === "light" ? "default" : "outline"}
+            onClick={() => setTheme("light")}
+            className="gap-2"
+          >
+            <Sun className="h-4 w-4 text-amber-500" /> Sáng (Light)
+          </Button>
+          <Button
+            variant={theme === "dark" ? "default" : "outline"}
+            onClick={() => setTheme("dark")}
+            className="gap-2"
+          >
+            <Moon className="h-4 w-4 text-indigo-400" /> Tối (Dark)
+          </Button>
+          <Button
+            variant={theme === "system" ? "default" : "outline"}
+            onClick={() => setTheme("system")}
+            className="gap-2"
+          >
+            <Laptop className="h-4 w-4" /> Theo Hệ Thống (System)
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="border">
+        <CardHeader>
+          <CardTitle>Quản Lý Dữ Liệu & Bộ Nhớ</CardTitle>
+          <CardDescription>Xóa dữ liệu bộ nhớ cục bộ hoặc làm mới cache.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '<div className="flex items-center justify-between rounded-xl border p-4">
+            <div>
+              <p className="text-sm font-semibold">Xóa Lịch Sử Tin Nhắn Worker</p>
+              <p className="text-xs text-muted-foreground">Xóa toàn bộ log cross-tab broadcast hiện tại.</p>
+            </div>
+            <Button variant="outline" size="sm" onClick={clearMessages} className="gap-1.5 text-destructive">
+              <Trash2 className="h-4 w-4" /> Xóa Log
+            </Button>
+          </div>\n          ')
+          $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '<div className="flex items-center justify-between rounded-xl border p-4">
+            <div>
+              <p className="text-sm font-semibold">Xóa Cache Service Worker</p>
+              <p className="text-xs text-muted-foreground">Làm mới dữ liệu offline cache của trình duyệt.</p>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleClearCache} className="gap-1.5">
+              <Trash2 className="h-4 w-4" /> Xóa Cache SW
+            </Button>
+          </div>\n          ')
+          <div className="flex items-center justify-between rounded-xl border p-4">
+            <div>
+              <p className="text-sm font-semibold">Xóa LocalStorage App</p>
+              <p className="text-xs text-muted-foreground">Đặt lại toàn bộ trạng thái theme và user auth về mặc định.</p>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => { localStorage.clear(); window.location.reload(); }} className="gap-1.5 text-destructive">
+              <Trash2 className="h-4 w-4" /> Reset LocalStorage
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+EOF
+
+# NotFound.tsx
+cat << 'EOF' > src/pages/NotFound.tsx
+import React from "react";
+import { Link } from "react-router-dom";
+import { Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export const NotFound: React.FC = () => {
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center text-center space-y-4">
+      <div className="font-mono text-8xl font-black text-primary/40">404</div>
+      <h2 className="text-2xl font-bold">Trang không tồn tại</h2>
+      <p className="max-w-md text-sm text-muted-foreground">
+        Đường dẫn bạn truy cập không hợp lệ hoặc đã bị thay đổi.
+      </p>
+      <Link to="/">
+        <Button className="gap-2 mt-2">
+          <Home className="h-4 w-4" /> Quay về Trang chủ
+        </Button>
+      </Link>
+    </div>
+  );
+};
+EOF
+
+# AppRoutes.tsx
+cat << EOF > src/routes/AppRoutes.tsx
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { Dashboard } from "@/pages/Dashboard";
+$([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'import { WorkerSyncPage } from "@/pages/WorkerSyncPage";\n')
+$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'import { ServiceWorkerPage } from "@/pages/ServiceWorkerPage";\n')
+import { AnalyticsPage } from "@/pages/AnalyticsPage";
+import { SettingsPage } from "@/pages/SettingsPage";
+import { NotFound } from "@/pages/NotFound";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <Dashboard /> },
+      $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '{ path: "worker-sync", element: <WorkerSyncPage /> },\n      ')
+      $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{ path: "service-worker", element: <ServiceWorkerPage /> },\n      ')
+      { path: "analytics", element: <AnalyticsPage /> },
+      { path: "settings", element: <SettingsPage /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
+]);
+
+export const AppRoutes: React.FC = () => {
+  return <RouterProvider router={router} />;
+};
+EOF
+
+# App.tsx & main.tsx
+cat << 'EOF' > src/App.tsx
+import React, { useEffect } from "react";
+import { AppRoutes } from "@/routes/AppRoutes";
+import { useAppStore } from "@/stores/appStore";
+
+export const App: React.FC = () => {
+  const { theme, setTheme } = useAppStore();
+
+  useEffect(() => {
+    setTheme(theme);
+  }, []);
+
+  return <AppRoutes />;
+};
+
+export default App;
+EOF
+
+cat << 'EOF' > src/main.tsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+EOF
+
+cat << 'EOF' > .gitignore
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+EOF
+
+cat << 'EOF' > README.md
+# 🚀 React Hackathon Starter Kit (pnpm + TypeScript)
+
+> Template chuẩn mực cho các cuộc thi Hackathon: **React 19 + TypeScript + pnpm + Vite + Tailwind CSS + shadcn/ui + Zustand + React Router v7**.
+
+## 🛠️ Khởi Chạy
+```bash
+# 1. Cài đặt dependencies với pnpm
+pnpm install
+
+# 2. Khởi động Dev Server
+pnpm dev
+
+# 3. Build sản phẩm
+pnpm run build
+```
+EOF
+printf "   ${GREEN}✓ Hoàn tất xây dựng Sidebar, Header và Page Navigation.${NC}\n\n"
+
+# ------------------------------------------------------------------------------
+# BƯỚC 8: Tích hợp Web Workers (nếu được bật)
+# ------------------------------------------------------------------------------
+printf "${BLUE}${BOLD}▶️ [BƯỚC 8/9] ⚡ Tích hợp Web Workers (Shared Worker & Service Worker PWA)...${NC}\n"
+
+if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
+  printf "   ↳ [Shared Worker] Tạo src/workers/shared-worker.ts, src/hooks/useSharedWorker.ts, WorkerSyncPage.tsx...\n"
+  
 cat << 'EOF' > src/stores/workerStore.ts
 import { create } from "zustand";
 import { WorkerMessage } from "@/types";
@@ -1342,12 +2240,12 @@ export const WorkerSyncPage: React.FC = () => {
   );
 };
 EOF
+  printf "   ${GREEN}✓ Hoàn tất cấu hình Shared Worker.${NC}\n"
 fi
 
-# ------------------------------------------------------------------------------
-# 10. Optional: Service Worker & PWA
-# ------------------------------------------------------------------------------
 if [ "$ENABLE_SERVICE_WORKER" = "y" ]; then
+  printf "   ↳ [Service Worker] Tạo public/sw.js, src/hooks/useServiceWorker.ts, ServiceWorkerPage.tsx...\n"
+  
 cat << 'EOF' > public/sw.js
 const CACHE_NAME = "hackathon-cache-v1";
 const ASSETS_TO_CACHE = [
@@ -1940,880 +2838,20 @@ export const ServiceWorkerPage: React.FC = () => {
   );
 };
 EOF
+  printf "   ${GREEN}✓ Hoàn tất cấu hình Service Worker & PWA.${NC}\n"
 fi
 
-# ------------------------------------------------------------------------------
-# 11. Header, Sidebar, Layout
-# ------------------------------------------------------------------------------
-# Header.tsx
-if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
-cat << 'EOF' > src/components/layout/Header.tsx
-import React from "react";
-import { Menu, Moon, Sun, Users } from "lucide-react";
-import { useAppStore } from "@/stores/appStore";
-import { useWorkerStore } from "@/stores/workerStore";
-import { useAuthStore } from "@/stores/authStore";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-
-export const Header: React.FC = () => {
-  const { theme, setTheme, toggleSidebar, setMobileSidebarOpen } = useAppStore();
-  const { activeTabsCount, isSharedWorkerActive } = useWorkerStore();
-  const { user } = useAuthStore();
-
-  return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/80 px-4 backdrop-blur-md transition-all lg:px-6">
-      <div className="flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden"
-          onClick={() => setMobileSidebarOpen(true)}
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hidden lg:flex"
-          onClick={toggleSidebar}
-          title="Thu gọn / Mở rộng Sidebar"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-
-        <div className="flex items-center gap-2">
-          <span className="bg-gradient-to-r from-primary via-indigo-500 to-purple-500 bg-clip-text text-lg font-extrabold text-transparent">
-            HACKATHON
-          </span>
-          <Badge variant="outline" className="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider">
-            React 19 + TS
-          </Badge>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2 sm:gap-4">
-        <div className="flex items-center gap-1.5 rounded-full bg-secondary/80 px-3 py-1 text-xs font-medium backdrop-blur-sm border">
-          <Users className="h-3.5 w-3.5 text-primary" />
-          <span className="hidden sm:inline text-muted-foreground">Tabs:</span>
-          <span className="font-bold text-foreground">{activeTabsCount}</span>
-          <span
-            className={`h-2 w-2 rounded-full ${
-              isSharedWorkerActive ? "bg-emerald-500 animate-pulse" : "bg-muted"
-            }`}
-          />
-        </div>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="rounded-full"
-        >
-          {theme === "dark" ? (
-            <Sun className="h-4 w-4 text-amber-400" />
-          ) : (
-            <Moon className="h-4 w-4 text-slate-700" />
-          )}
-        </Button>
-
-        {user && (
-          <div className="flex items-center gap-2 pl-2">
-            <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="hidden text-left md:block">
-              <p className="text-xs font-semibold leading-none">{user.name}</p>
-              <p className="text-[10px] text-muted-foreground capitalize">{user.role}</p>
-            </div>
-          </div>
-        )}
-      </div>
-    </header>
-  );
-};
-EOF
-else
-cat << 'EOF' > src/components/layout/Header.tsx
-import React from "react";
-import { Menu, Moon, Sun } from "lucide-react";
-import { useAppStore } from "@/stores/appStore";
-import { useAuthStore } from "@/stores/authStore";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-
-export const Header: React.FC = () => {
-  const { theme, setTheme, toggleSidebar, setMobileSidebarOpen } = useAppStore();
-  const { user } = useAuthStore();
-
-  return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/80 px-4 backdrop-blur-md transition-all lg:px-6">
-      <div className="flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden"
-          onClick={() => setMobileSidebarOpen(true)}
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hidden lg:flex"
-          onClick={toggleSidebar}
-          title="Thu gọn / Mở rộng Sidebar"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
-
-        <div className="flex items-center gap-2">
-          <span className="bg-gradient-to-r from-primary via-indigo-500 to-purple-500 bg-clip-text text-lg font-extrabold text-transparent">
-            HACKATHON
-          </span>
-          <Badge variant="outline" className="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider">
-            React 19 + TS
-          </Badge>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2 sm:gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="rounded-full"
-        >
-          {theme === "dark" ? (
-            <Sun className="h-4 w-4 text-amber-400" />
-          ) : (
-            <Moon className="h-4 w-4 text-slate-700" />
-          )}
-        </Button>
-
-        {user && (
-          <div className="flex items-center gap-2 pl-2">
-            <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="hidden text-left md:block">
-              <p className="text-xs font-semibold leading-none">{user.name}</p>
-              <p className="text-[10px] text-muted-foreground capitalize">{user.role}</p>
-            </div>
-          </div>
-        )}
-      </div>
-    </header>
-  );
-};
-EOF
+if [ "$ENABLE_SHARED_WORKER" != "y" ] && [ "$ENABLE_SERVICE_WORKER" != "y" ]; then
+  printf "   ↳ Bỏ qua cấu hình Web Workers theo lựa chọn của bạn.\n"
 fi
-
-# Sidebar.tsx
-cat << EOF > src/components/layout/Sidebar.tsx
-import React from "react";
-import { NavLink } from "react-router-dom";
-import {
-  LayoutDashboard,
-  BarChart3,
-  Settings,
-  Flame,
-  X,
-  Sparkles,
-  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf "Cpu,\n  ")$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf "Zap,\n  ")
-} from "lucide-react";
-import { useAppStore } from "@/stores/appStore";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-
-interface NavItem {
-  title: string;
-  path: string;
-  icon: React.ElementType;
-  badge?: string;
-}
-
-const navItems: NavItem[] = [
-  { title: "Dashboard", path: "/", icon: LayoutDashboard },
-  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '{ title: "Shared Worker Sync", path: "/worker-sync", icon: Cpu, badge: "Multi-tab" },\n  ')$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{ title: "Service Worker & PWA", path: "/service-worker", icon: Zap, badge: "Offline/PWA" },\n  '){ title: "Analytics", path: "/analytics", icon: BarChart3 },
-  { title: "Settings", path: "/settings", icon: Settings },
-];
-
-export const Sidebar: React.FC = () => {
-  const { isSidebarCollapsed, isMobileSidebarOpen, setMobileSidebarOpen } = useAppStore();
-
-  const renderNavLinks = (isMobile = false) => {
-    const collapsed = isSidebarCollapsed && !isMobile;
-
-    return (
-      <div
-        className={cn(
-          "flex flex-col gap-2 py-4",
-          collapsed ? "items-center px-2" : "px-3"
-        )}
-      >
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              title={collapsed ? item.title : undefined}
-              onClick={() => setMobileSidebarOpen(false)}
-              className={({ isActive }) =>
-                cn(
-                  "group relative flex items-center rounded-xl text-sm font-medium transition-all duration-200",
-                  collapsed
-                    ? "h-11 w-11 justify-center p-0"
-                    : "w-full gap-3 px-3.5 py-2.5",
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                )
-              }
-            >
-              <Icon className="h-5 w-5 shrink-0 transition-transform duration-200 group-hover:scale-110" />
-
-              {!collapsed && (
-                <span className="truncate transition-opacity duration-200">
-                  {item.title}
-                </span>
-              )}
-
-              {item.badge && !collapsed && (
-                <Badge
-                  variant="secondary"
-                  className="ml-auto hidden text-[10px] uppercase font-bold sm:inline-flex"
-                >
-                  {item.badge}
-                </Badge>
-              )}
-            </NavLink>
-          );
-        })}
-      </div>
-    );
-  };
-
-  return (
-    <>
-      <aside
-        className={cn(
-          "hidden border-r bg-sidebar transition-all duration-300 ease-in-out lg:flex lg:flex-col",
-          isSidebarCollapsed ? "w-20" : "w-64"
-        )}
-      >
-        <div
-          className={cn(
-            "flex h-16 items-center border-b transition-all duration-300",
-            isSidebarCollapsed ? "justify-center px-2" : "gap-3 px-5"
-          )}
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-indigo-500 shadow-md shadow-primary/30">
-            <Flame className="h-5 w-5 text-white" />
-          </div>
-          {!isSidebarCollapsed && (
-            <div className="flex flex-col overflow-hidden">
-              <span className="font-extrabold text-foreground tracking-tight truncate">
-                FAST PROTOTYPE
-              </span>
-              <span className="text-[10px] text-muted-foreground truncate">
-                Hackathon Edition
-              </span>
-            </div>
-          )}
-        </div>
-
-        <div className="flex-1 overflow-y-auto">{renderNavLinks(false)}</div>
-
-        {!isSidebarCollapsed && (
-          <div className="p-4">
-            <div className="rounded-xl border bg-gradient-to-br from-primary/10 via-background to-secondary p-3.5 text-center">
-              <Sparkles className="mx-auto h-5 w-5 text-primary mb-1" />
-              <p className="text-xs font-bold text-foreground">Hackathon Ready</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">Zustand + shadcn/ui</p>
-            </div>
-          </div>
-        )}
-      </aside>
-
-      {isMobileSidebarOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
-            onClick={() => setMobileSidebarOpen(false)}
-          />
-          <div className="relative z-50 flex w-72 flex-col border-r bg-sidebar shadow-2xl">
-            <div className="flex h-16 items-center justify-between border-b px-5">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white">
-                  <Flame className="h-4 w-4" />
-                </div>
-                <span className="font-bold text-foreground">HACKATHON</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setMobileSidebarOpen(false)}
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-            <div className="flex-1 overflow-y-auto">{renderNavLinks(true)}</div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
-EOF
-
-# AppLayout.tsx
-cat << EOF > src/components/layout/AppLayout.tsx
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { Sidebar } from "./Sidebar";
-import { Header } from "./Header";
-$([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'import { useSharedWorker } from "@/hooks/useSharedWorker";\n')
-$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'import { useServiceWorker } from "@/hooks/useServiceWorker";\nimport { RefreshCw, WifiOff } from "lucide-react";\nimport { Button } from "@/components/ui/button";\n')
-
-export const AppLayout: React.FC = () => {
-  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'useSharedWorker();\n  ')
-  $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'const { isOnline, hasUpdate, updateServiceWorker } = useServiceWorker();\n  ')
-
-  return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Header />
-        $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{!isOnline && (
-          <div className="flex items-center justify-center gap-2 bg-destructive/15 px-4 py-2 text-xs font-semibold text-destructive border-b border-destructive/20">
-            <WifiOff className="h-4 w-4" />
-            Bạn đang offline! Ứng dụng vẫn hoạt động nhờ ServiceWorker cache.
-          </div>
-        )}
-        {hasUpdate && (
-          <div className="flex items-center justify-between bg-primary px-4 py-2 text-xs font-medium text-primary-foreground">
-            <span>Phiên bản mới đã sẵn sàng!</span>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-7 text-xs gap-1"
-              onClick={updateServiceWorker}
-            >
-              <RefreshCw className="h-3 w-3" /> Cập nhật ngay
-            </Button>
-          </div>
-        )}\n        ')<main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  );
-};
-EOF
+printf "\n"
 
 # ------------------------------------------------------------------------------
-# 12. Dashboard, Analytics, Settings & Routes
+# BƯỚC 9: Cài đặt dependencies qua pnpm
 # ------------------------------------------------------------------------------
-# Dashboard.tsx
-cat << EOF > src/pages/Dashboard.tsx
-import React from "react";
-import {
-  Activity,
-  Boxes,
-  Layers,
-  Share2,
-  Zap,
-  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'Cpu,\n  Users,\n  ')
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { useAuthStore } from "@/stores/authStore";
-import { Link } from "react-router-dom";
-$([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'import { useWorkerStore } from "@/stores/workerStore";\n')
-$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'import { useServiceWorker } from "@/hooks/useServiceWorker";\n')
+printf "${BLUE}${BOLD}▶️ [BƯỚC 9/9] 📥 Cài đặt Dependencies qua pnpm...${NC}\n"
+printf "   ↳ Đang tải và liên kết các package với pnpm v11...\n\n"
 
-export const Dashboard: React.FC = () => {
-  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'const { activeTabsCount, sharedCounter } = useWorkerStore();\n  ')
-  $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'const { isOnline, cachedUrls } = useServiceWorker();\n  ')
-  const { user } = useAuthStore();
-
-  const stats = [
-    $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '{
-      title: "Tabs Đang Mở",
-      value: `${activeTabsCount} tabs`,
-      desc: "Đồng bộ qua SharedWorker",
-      icon: Users,
-      color: "text-blue-500",
-      bg: "bg-blue-500/10",
-    },
-    {
-      title: "Shared Counter",
-      value: sharedCounter,
-      desc: "State chung giữa các tab",
-      icon: Cpu,
-      color: "text-purple-500",
-      bg: "bg-purple-500/10",
-    },\n    ')
-    $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{
-      title: "Trạng Thái Mạng",
-      value: isOnline ? "Online 🟢" : "Offline 🔴",
-      desc: "PWA Service Worker Active",
-      icon: Zap,
-      color: "text-amber-500",
-      bg: "bg-amber-500/10",
-    },
-    {
-      title: "Cache Storage",
-      value: `${cachedUrls.length} files`,
-      desc: "Offline-first Cache",
-      icon: Layers,
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10",
-    },\n    ')
-    {
-      title: "Zustand State",
-      value: "Active",
-      desc: "Persist & DevTools Ready",
-      icon: Layers,
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10",
-    },
-    {
-      title: "shadcn/ui & Tailwind",
-      value: "Ready",
-      desc: "Modern Design System",
-      icon: Zap,
-      color: "text-indigo-500",
-      bg: "bg-indigo-500/10",
-    },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-3xl border bg-gradient-to-r from-primary/10 via-purple-500/10 to-pink-500/10 p-6 md:p-8 backdrop-blur-xl">
-        <div className="relative z-10 max-w-2xl space-y-3">
-          <Badge variant="default" className="bg-primary/90">
-            Hackathon Starter v1.0
-          </Badge>
-          <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-foreground">
-            Xin chào, {user?.name || "Hacker"}! 🚀
-          </h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Template chuẩn React 19 + TypeScript + pnpm + Zustand + shadcn/ui được tối ưu hóa cho các cuộc thi Hackathon đòi hỏi tốc độ phát triển cực nhanh.
-          </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '<Link to="/worker-sync">
-              <Button className="gap-2">
-                <Cpu className="h-4 w-4" /> SharedWorker Multi-Tab
-              </Button>
-            </Link>\n            ')
-            $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '<Link to="/service-worker">
-              <Button variant="secondary" className="gap-2">
-                <Zap className="h-4 w-4" /> Service Worker & PWA
-              </Button>
-            </Link>\n            ')
-            <Link to="/analytics">
-              <Button variant="outline" className="gap-2">
-                <Activity className="h-4 w-4" /> Xem Analytics
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.slice(0, 4).map((item, idx) => {
-          const Icon = item.icon;
-          return (
-            <Card key={idx} className="relative overflow-hidden border">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {item.title}
-                </CardTitle>
-                <div className={\`rounded-xl p-2.5 \${item.bg}\`}>
-                  <Icon className={\`h-4 w-4 \${item.color}\`} />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-black">{item.value}</div>
-                <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Boxes className="h-5 w-5 text-primary" />
-              Công Nghệ Đã Tích Hợp Sẵn
-            </CardTitle>
-            <CardDescription>
-              Mọi thành phần đã cấu hình TypeScript strictly typed và sẵn sàng code ngay lập tức
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {[
-              { name: "pnpm & TypeScript", desc: "Quản lý gói siêu tốc, an toàn type-safe toàn bộ dự án." },
-              { name: "Tailwind CSS & shadcn/ui", desc: "Design system chuẩn mực, Dark/Light mode, animations." },
-              { name: "Zustand State Management", desc: "Quản lý state toàn cục nhẹ nhàng, hỗ trợ LocalStorage persist." },
-              $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '{ name: "Shared Worker", desc: "Giao tiếp và đồng bộ state tức thời giữa nhiều tab trình duyệt." },\n              ')
-              $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{ name: "Service Worker & PWA", desc: "Caching offline, push notifications, quản lý CacheStorage." },\n              ')
-              { name: "React Router v7", desc: "Điều hướng trang, layout lồng nhau và 404 page." },
-            ].map((tech, i) => (
-              <div key={i} className="flex items-start gap-3 rounded-lg border bg-accent/30 p-3">
-                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500 text-xs font-bold">
-                  ✓
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold">{tech.name}</h4>
-                  <p className="text-xs text-muted-foreground">{tech.desc}</p>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Share2 className="h-5 w-5 text-primary" />
-              Hướng Dẫn Nhanh Hackathon
-            </CardTitle>
-            <CardDescription>Cách tận dụng tối đa starter kit này</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="rounded-xl border p-4 bg-muted/40 space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">1. UI & Components</h4>
-              <p className="text-xs text-muted-foreground">
-                Tất cả các components shadcn/ui nằm trong <code>src/components/ui/</code>. Bạn có thể mở rộng tự do!
-              </p>
-            </div>
-
-            <div className="rounded-xl border p-4 bg-muted/40 space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-primary">2. State Management</h4>
-              <p className="text-xs text-muted-foreground">
-                Tạo thêm stores tại <code>src/stores/</code> để lưu trữ state nghiệp vụ với Zustand.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-};
-EOF
-
-# AnalyticsPage.tsx
-cat << 'EOF' > src/pages/AnalyticsPage.tsx
-import React from "react";
-import { TrendingUp, Users, Clock, ShieldCheck } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-
-export const AnalyticsPage: React.FC = () => {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Analytics & Metrics 📊</h1>
-        <p className="text-sm text-muted-foreground">
-          Trang mẫu theo dõi hiệu năng và chỉ số ứng dụng thời gian thực.
-        </p>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { title: "Thời gian phản hồi UI", value: "1.2 ms", change: "+99.8% Faster", icon: Clock },
-          { title: "Độ sẵn sàng hệ thống", value: "99.9%", change: "High Availability", icon: ShieldCheck },
-          { title: "Tải CPU Client", value: "< 0.5%", change: "Optimized render", icon: TrendingUp },
-          { title: "Lượt tương tác", value: "1,248", change: "+14% hôm nay", icon: Users },
-        ].map((item, i) => {
-          const Icon = item.icon;
-          return (
-            <Card key={i} className="border">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-xs font-semibold text-muted-foreground uppercase">{item.title}</CardTitle>
-                <Icon className="h-4 w-4 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{item.value}</div>
-                <Badge variant="outline" className="mt-1 text-[10px] text-emerald-500">
-                  {item.change}
-                </Badge>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      <Card className="border">
-        <CardHeader>
-          <CardTitle>Biểu đồ hiệu năng Hackathon</CardTitle>
-          <CardDescription>Sử dụng CSS Native Bars hoặc tích hợp Recharts / Chart.js tùy nhu cầu.</CardDescription>
-        </CardHeader>
-        <CardContent className="h-64 flex items-end gap-3 pt-8 pb-4">
-          {[45, 78, 56, 92, 64, 88, 95, 70, 85, 100].map((val, idx) => (
-            <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
-              <div
-                style={{ height: `${val}%` }}
-                className="w-full rounded-t-lg bg-gradient-to-t from-primary/60 to-primary transition-all duration-300 group-hover:opacity-80 group-hover:scale-y-105"
-              />
-              <span className="text-[10px] text-muted-foreground">T{idx + 1}</span>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-EOF
-
-# SettingsPage.tsx
-cat << EOF > src/pages/SettingsPage.tsx
-import React from "react";
-import { Moon, Sun, Laptop, Trash2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useAppStore } from "@/stores/appStore";
-$([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'import { useWorkerStore } from "@/stores/workerStore";\n')
-
-export const SettingsPage: React.FC = () => {
-  const { theme, setTheme } = useAppStore();
-  $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'const { clearMessages } = useWorkerStore();\n')
-
-  $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'const handleClearCache = async () => {
-    if ("caches" in window) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => caches.delete(k)));
-      alert("Đã xóa toàn bộ Service Worker Caches thành công!");
-    }
-  };\n  ')
-
-  return (
-    <div className="max-w-4xl space-y-6">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Cài Đặt Hệ Thống ⚙️</h1>
-        <p className="text-sm text-muted-foreground">
-          Quản lý giao diện, trạng thái bộ nhớ đệm và thiết lập ứng dụng.
-        </p>
-      </div>
-
-      <Card className="border">
-        <CardHeader>
-          <CardTitle>Giao diện (Theme Mode)</CardTitle>
-          <CardDescription>Chọn chế độ hiển thị phù hợp với sở thích của bạn.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-3">
-          <Button
-            variant={theme === "light" ? "default" : "outline"}
-            onClick={() => setTheme("light")}
-            className="gap-2"
-          >
-            <Sun className="h-4 w-4 text-amber-500" /> Sáng (Light)
-          </Button>
-          <Button
-            variant={theme === "dark" ? "default" : "outline"}
-            onClick={() => setTheme("dark")}
-            className="gap-2"
-          >
-            <Moon className="h-4 w-4 text-indigo-400" /> Tối (Dark)
-          </Button>
-          <Button
-            variant={theme === "system" ? "default" : "outline"}
-            onClick={() => setTheme("system")}
-            className="gap-2"
-          >
-            <Laptop className="h-4 w-4" /> Theo Hệ Thống (System)
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card className="border">
-        <CardHeader>
-          <CardTitle>Quản Lý Dữ Liệu & Bộ Nhớ</CardTitle>
-          <CardDescription>Xóa dữ liệu bộ nhớ cục bộ hoặc làm mới cache.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '<div className="flex items-center justify-between rounded-xl border p-4">
-            <div>
-              <p className="text-sm font-semibold">Xóa Lịch Sử Tin Nhắn Worker</p>
-              <p className="text-xs text-muted-foreground">Xóa toàn bộ log cross-tab broadcast hiện tại.</p>
-            </div>
-            <Button variant="outline" size="sm" onClick={clearMessages} className="gap-1.5 text-destructive">
-              <Trash2 className="h-4 w-4" /> Xóa Log
-            </Button>
-          </div>\n          ')
-          $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '<div className="flex items-center justify-between rounded-xl border p-4">
-            <div>
-              <p className="text-sm font-semibold">Xóa Cache Service Worker</p>
-              <p className="text-xs text-muted-foreground">Làm mới dữ liệu offline cache của trình duyệt.</p>
-            </div>
-            <Button variant="outline" size="sm" onClick={handleClearCache} className="gap-1.5">
-              <Trash2 className="h-4 w-4" /> Xóa Cache SW
-            </Button>
-          </div>\n          ')
-          <div className="flex items-center justify-between rounded-xl border p-4">
-            <div>
-              <p className="text-sm font-semibold">Xóa LocalStorage App</p>
-              <p className="text-xs text-muted-foreground">Đặt lại toàn bộ trạng thái theme và user auth về mặc định.</p>
-            </div>
-            <Button variant="outline" size="sm" onClick={() => { localStorage.clear(); window.location.reload(); }} className="gap-1.5 text-destructive">
-              <Trash2 className="h-4 w-4" /> Reset LocalStorage
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-EOF
-
-# NotFound.tsx
-cat << 'EOF' > src/pages/NotFound.tsx
-import React from "react";
-import { Link } from "react-router-dom";
-import { Home } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-export const NotFound: React.FC = () => {
-  return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center text-center space-y-4">
-      <div className="font-mono text-8xl font-black text-primary/40">404</div>
-      <h2 className="text-2xl font-bold">Trang không tồn tại</h2>
-      <p className="max-w-md text-sm text-muted-foreground">
-        Đường dẫn bạn truy cập không hợp lệ hoặc đã bị thay đổi.
-      </p>
-      <Link to="/">
-        <Button className="gap-2 mt-2">
-          <Home className="h-4 w-4" /> Quay về Trang chủ
-        </Button>
-      </Link>
-    </div>
-  );
-};
-EOF
-
-# AppRoutes.tsx
-cat << EOF > src/routes/AppRoutes.tsx
-import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AppLayout } from "@/components/layout/AppLayout";
-import { Dashboard } from "@/pages/Dashboard";
-$([ "$ENABLE_SHARED_WORKER" = "y" ] && printf 'import { WorkerSyncPage } from "@/pages/WorkerSyncPage";\n')
-$([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf 'import { ServiceWorkerPage } from "@/pages/ServiceWorkerPage";\n')
-import { AnalyticsPage } from "@/pages/AnalyticsPage";
-import { SettingsPage } from "@/pages/SettingsPage";
-import { NotFound } from "@/pages/NotFound";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <AppLayout />,
-    children: [
-      { index: true, element: <Dashboard /> },
-      $([ "$ENABLE_SHARED_WORKER" = "y" ] && printf '{ path: "worker-sync", element: <WorkerSyncPage /> },\n      ')
-      $([ "$ENABLE_SERVICE_WORKER" = "y" ] && printf '{ path: "service-worker", element: <ServiceWorkerPage /> },\n      ')
-      { path: "analytics", element: <AnalyticsPage /> },
-      { path: "settings", element: <SettingsPage /> },
-      { path: "*", element: <NotFound /> },
-    ],
-  },
-]);
-
-export const AppRoutes: React.FC = () => {
-  return <RouterProvider router={router} />;
-};
-EOF
-
-cat << 'EOF' > src/App.tsx
-import React, { useEffect } from "react";
-import { AppRoutes } from "@/routes/AppRoutes";
-import { useAppStore } from "@/stores/appStore";
-
-export const App: React.FC = () => {
-  const { theme, setTheme } = useAppStore();
-
-  useEffect(() => {
-    setTheme(theme);
-  }, []);
-
-  return <AppRoutes />;
-};
-
-export default App;
-EOF
-
-cat << 'EOF' > src/main.tsx
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-EOF
-
-cat << 'EOF' > .gitignore
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-EOF
-
-cat << 'EOF' > README.md
-# 🚀 React Hackathon Starter Kit (pnpm + TypeScript)
-
-> Template chuẩn mực cho các cuộc thi Hackathon: **React 19 + TypeScript + pnpm + Vite + Tailwind CSS + shadcn/ui + Zustand + React Router v7**.
-
-## 🛠️ Khởi Chạy
-```bash
-# 1. Cài đặt dependencies với pnpm
-pnpm install
-
-# 2. Khởi động Dev Server
-pnpm dev
-
-# 3. Build sản phẩm
-pnpm run build
-```
-EOF
-
-# ------------------------------------------------------------------------------
-# 13. Run pnpm install
-# ------------------------------------------------------------------------------
-printf "${BLUE}⚡ [7/7] Cài đặt dependencies qua pnpm...${NC}\n"
 if command -v pnpm >/dev/null 2>&1; then
   pnpm install
 else
@@ -2823,9 +2861,48 @@ fi
 
 chmod +x setup.sh 2>/dev/null || true
 
-printf "\n${GREEN}${BOLD}================================================================${NC}\n"
+printf "\n${GREEN}${BOLD}================================================================================${NC}\n"
 printf "${GREEN}${BOLD}✅ DỰ ÁN REACT HACKATHON ĐÃ ĐƯỢC TẠO THÀNH CÔNG!${NC}\n"
-printf "${GREEN}${BOLD}================================================================${NC}\n"
-printf "👉 Để khởi chạy dự án:\n"
+printf "${GREEN}${BOLD}================================================================================${NC}\n\n"
+
+printf "${CYAN}${BOLD}🚀 KHỞI ĐỘNG DỰ ÁN NGAY:${NC}\n"
 printf "   ${CYAN}cd \"%s\"${NC}\n" "$TARGET_DIR"
 printf "   ${CYAN}pnpm dev${NC}\n\n"
+
+printf "${MAGENTA}${BOLD}📖 HƯỚNG DẪN TỪNG BƯỚC SỬ DỤNG VÀ PHÁT TRIỂN (DEVELOPER GUIDE):${NC}\n"
+printf "%s\n" "--------------------------------------------------------------------------------"
+printf " 1. ${BOLD}📂 Cấu trúc thư mục (Folder Structure):${NC}\n"
+printf "    • ${CYAN}src/components/ui/${NC}    : Các UI primitives chuẩn shadcn/ui (Button, Card, Badge, Avatar...)\n"
+printf "    • ${CYAN}src/components/layout/${NC}: Header, Sidebar (toggled responsive), AppLayout\n"
+printf "    • ${CYAN}src/stores/${NC}           : Quản lý state toàn cục với Zustand (appStore, authStore...)\n"
+printf "    • ${CYAN}src/pages/${NC}            : Các trang giao diện (Dashboard, Analytics, Settings...)\n"
+printf "    • ${CYAN}src/routes/${NC}           : Cấu hình điều hướng với React Router v7 (AppRoutes.tsx)\n"
+printf "    • ${CYAN}src/hooks/${NC}            : Custom hooks (useSharedWorker, useServiceWorker...)\n"
+printf "    • ${CYAN}src/lib/utils.ts${NC}       : Hàm cn() nối class Tailwind CSS và format dữ liệu\n"
+printf "    • ${CYAN}public/${NC}              : Chứa file tĩnh & Service Worker (sw.js)\n\n"
+
+printf " 2. ${BOLD}🗄️ Quản lý State với Zustand:${NC}\n"
+printf "    • Đọc/ghi state: ${CYAN}const { theme, setTheme } = useAppStore();${NC}\n"
+printf "    • Thêm store mới: Tạo file tại ${CYAN}src/stores/myStore.ts${NC} bằng hàm ${CYAN}create()${NC} của Zustand.\n\n"
+
+printf " 3. ${BOLD}🧭 Thêm Trang mới & Cập nhật Sidebar:${NC}\n"
+printf "    • Bước 1: Tạo component trang tại ${CYAN}src/pages/MyPage.tsx${NC}\n"
+printf "    • Bước 2: Khai báo route trong ${CYAN}src/routes/AppRoutes.tsx${NC}\n"
+printf "    • Bước 3: Thêm item vào danh sách ${CYAN}navItems${NC} trong ${CYAN}src/components/layout/Sidebar.tsx${NC}\n\n"
+
+if [ "$ENABLE_SHARED_WORKER" = "y" ]; then
+printf " 4. ${BOLD}⚡ Đồng bộ Đa Tab (Shared Worker):${NC}\n"
+printf "    • Gọi ${CYAN}const { sharedCounter, incrementCounter } = useSharedWorker();${NC}\n"
+printf "    • Mọi thay đổi dữ liệu sẽ được phát thanh (broadcast) đồng thời tới tất cả tab đang mở!\n\n"
+fi
+
+if [ "$ENABLE_SERVICE_WORKER" = "y" ]; then
+printf " 5. ${BOLD}📲 PWA Offline & Push Notification (Service Worker):${NC}\n"
+printf "    • Gọi ${CYAN}const { isOnline, sendTestNotification } = useServiceWorker();${NC}\n"
+printf "    • Quản lý bộ nhớ đệm CacheStorage và bắn notification hệ thống dễ dàng.\n\n"
+fi
+
+printf " 6. ${BOLD}🎨 Tùy biến Giao diện (Tailwind CSS & shadcn/ui):${NC}\n"
+printf "    • Tùy chỉnh màu sắc CSS Variables trong ${CYAN}src/index.css${NC} và ${CYAN}tailwind.config.js${NC}\n"
+printf "    • Hệ thống tự động đồng bộ chế độ Dark/Light mode theo Zustand store.\n"
+printf "%s\n\n" "--------------------------------------------------------------------------------"
